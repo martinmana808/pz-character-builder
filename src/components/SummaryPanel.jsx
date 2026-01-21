@@ -213,11 +213,11 @@ Build your own PZ character https://pz-character-builder.netlify.app/
            </ul>
         </div>
       </div>
-
-      <div className="mt-4 border-slate-800">
+ {showHelp && (
+      <div className="">
         
         
-        {showHelp && (
+       
           <div className="mt-2 space-y-3 bg-slate-950/50 p-3 rounded border border-slate-800 animate-in fade-in slide-in-from-top-1 duration-200">
             <div>
               <h5 className="text-emerald-500 text-[10px] font-bold uppercase mb-1">Point System</h5>
@@ -244,8 +244,8 @@ Build your own PZ character https://pz-character-builder.netlify.app/
               </p>
             </div>
           </div>
-        )}
-      </div>
+        
+      </div>)}
 
       <div className="mt-2 border-slate-800">
         <div className="flex gap-2">

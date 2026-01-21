@@ -666,6 +666,7 @@ Verified accessibility across all views.
 - [x] Fixed `Uncaught ReferenceError: React is not defined` regression in `SummaryPanel.jsx`.
 - [x] Fixed `Uncaught ReferenceError: HelpCircle is not defined` by correcting aliased import usage.
 - [x] Reinstated profession description in the character build column of the `SummaryPanel`.
+- [x] Refined `SummaryPanel` layout by reorganizing the help information conditional rendering.
 
 <a name="log-20260121-profession-desc-restore"></a>
 # Task: Restore Profession Description in SummaryPanel
