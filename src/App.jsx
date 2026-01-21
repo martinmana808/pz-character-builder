@@ -180,7 +180,7 @@ function App() {
            (trait.excludes && trait.excludes.includes(t.id)) || 
            (t.excludes && t.excludes.includes(trait.id))
         )
-        .map(t => t.name);
+        .map(t => ({ name: t.name, category: t.category }));
   };
 
   // Helper to check if a trait is locked by occupation

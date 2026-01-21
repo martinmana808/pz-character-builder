@@ -77,7 +77,7 @@ Build your PZ character https://pz-character-builder.netlify.app/
       </div>
       <div className={`flex justify-between items-center text-xs group  p-1.5 rounded border   cursor-pointer transition-colors ${
           points === 0 ? 'border-slate-800 bg-slate-900/50 opacity-30 text-slate-400' :
-          points > 0 ? 'border-emerald-900/30 bg-emerald-900/20 text-emerald-400 ' : 'border-red-900/30 bg-red-900/30 text-red-400 '
+          points > 0 ? 'border-emerald-900/30 bg-emerald-900/20 text-emerald-400 ' : 'border-red-900/30 bg-red-900/20 text-red-400 '
         }`}>
         <div className="text-[10px]  mb-0 uppercase  font-bold">Points to Spend</div>
         <div className={`text-[18px] tabular-nums transition-colors duration-300 font-black ${
@@ -101,7 +101,7 @@ Build your PZ character https://pz-character-builder.netlify.app/
                </span>
               </div>
               {selectedOccupation.description && selectedOccupation.description.length > 1 && (
-                <p className="mt-2 text-[10px] italic text-emerald-300 opacity-70">
+                <p className="mt-2 text-[10px] italic text-slate-500 opacity-80">
                     {selectedOccupation.description.replace(/^"|"$/g, '')}
                 </p>
              )}

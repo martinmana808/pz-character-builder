@@ -298,3 +298,23 @@ The application has been initialized and implemented as a React + Vite project.
 ## Walkthrough
 - [x] Review `src/data/officialGameData.js`.
 - [x] Confirm all `icon` fields in `OFFICIAL_TRAITS` start with `/trait_icons/trait_`.
+
+<a name="log-20260121-trait-refinement"></a>
+# Task: Trait Refinement & GitHub Push
+**User Prompt:** "look for the already existing trait in the list and make it ACTIVE and LOCKED... the ones that dont exist and get ADDED, leave them as they are... push to github"
+
+## Implementation Plan
+1. **Name-Based Locking**: Implemented `isTraitLocked` helper in `App.jsx` that matches traits by name (e.g., "Keen Cook") instead of just ID. This prevents duplicates when an occupation grants a trait that also exists in the general list.
+2. **Refined Sorting**:
+    - Traits that are locked but were *not* originally positive (e.g., Desensitized) move to the top.
+    - Traits that are locked but *were* already positive (e.g., Keen Cook) keep their original placement based on cost sorting.
+3. **UI Propagation**: Passed `isTraitLocked` to `SummaryPanel.jsx` to ensure consistent padlock icons and green styling for all profession-locked items.
+4. **Security Refactor**: Removed hardcoded Groq API key from `src/services/groq.js` and replaced it with `import.meta.env.VITE_GROQ_API_KEY` to allow public repository hosting.
+5. **Git Workflow**: Initialized repository, set remote origin, and pushed sanitized code to main.
+
+## Walkthrough
+- [x] Select "Veteran". Verify "Desensitized" is at the top.
+- [x] Select "Cook". Verify "Keen Cook" is marked as locked but remains correctly sorted in the positive list.
+- [x] Verify no duplicate entries for "Keen Cook" appear.
+- [x] Confirm padlock icons appear in both main list and Summary Panel.
+- [x] Successfully pushed to https://github.com/martinmana808/pz-character-builder.

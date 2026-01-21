@@ -5,7 +5,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Slow Learner",
     "cost": 6,
     "category": "Negative",
-    "description": "Decreased XP gains.",
+    "description": "Decreased XP gains.\n70% XP in all skills except strength and fitness.",
     "icon": "/trait_icons/trait_slowlearner.png",
     "skills": {},
     "excludes": [
@@ -18,7 +18,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Clumsy",
     "cost": 2,
     "category": "Negative",
-    "description": "Makes more noise when moving.",
+    "description": "Makes more noise when moving.\n120% footsteps sound radius (results in 144% footsteps sound area).",
     "icon": "/trait_icons/trait_clumsy.png",
     "skills": {},
     "excludes": [
@@ -30,7 +30,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Nutritionist",
     "cost": 0,
     "category": "Negative",
-    "description": "Can see the nutritional values of any food.",
+    "description": "Can see the nutritional values of any food.\nAllows the player to see the nutritional values of any food, even those that aren't packaged. Improves foraging.",
     "icon": "/trait_icons/trait_nutritionist.png",
     "skills": {},
     "excludes": [
@@ -42,7 +42,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Weak Stomach",
     "cost": 3,
     "category": "Negative",
-    "description": "Higher chance to have food illness.",
+    "description": "Higher chance to have food illness.\n200% chance of food illness. Food illness lasts longer. Check Health for more details.",
     "icon": "/trait_icons/trait_weakstomach.png",
     "skills": {},
     "excludes": [
@@ -54,7 +54,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Brave",
     "cost": -4,
     "category": "Positive",
-    "description": "Less prone to becoming panicked.",
+    "description": "Less prone to becoming panicked.\n30% panic except for night terrors and phobias.",
     "icon": "/trait_icons/trait_brave.png",
     "skills": {},
     "excludes": [
@@ -69,7 +69,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Agoraphobic",
     "cost": 4,
     "category": "Negative",
-    "description": "Gets panicked when outdoors.",
+    "description": "Gets panicked when outdoors.\nPanic increases when outdoors. Foraging search radius decreased.",
     "icon": "/trait_icons/trait_agoraphobic.png",
     "skills": {},
     "excludes": [
@@ -82,7 +82,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Fast Healer",
     "cost": -6,
     "category": "Positive",
-    "description": "Recovers quickly from injuries and illness.",
+    "description": "Recovers faster from injury and illness.\nDoes not apply to exercise fatigue. Recently inflicted injuries have less severity. Including Scratches, Lacerations, Lodged Bullets, Deep wounds (with/without glass), Bites and Fractures. (Check Health for more details.)",
     "icon": "/trait_icons/trait_fasthealer.png",
     "skills": {},
     "excludes": [
@@ -127,7 +127,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Motion Sensitive",
     "cost": 4,
     "category": "Negative",
-    "description": "Gets motion sickness in a moving vehicle.",
+    "description": "gets motion sickness in a moving vehicle.\nApplies motion sickness if in a moving vehicle, similar to the normal sickness moodle",
     "icon": "/trait_icons/trait_motionsensitive.png",
     "skills": {},
     "excludes": []
@@ -137,7 +137,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Strong",
     "cost": -10,
     "category": "Positive",
-    "description": "Extra knockback from melee weapons. Increased carrying weight. +4 Strength",
+    "description": "Extra knockback from melee weapons and increased carry weight.\n+4 Strength, +40% knockback power (damage does not increase).",
     "icon": "/trait_icons/trait_strong.png",
     "skills": {
       "strength": 4
@@ -153,7 +153,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Restless Sleeper",
     "cost": 6,
     "category": "Negative",
-    "description": "Slow loss of tiredness while sleeping.",
+    "description": "Slow loss of tiredness while sleeping.\nSleep for fewer hours each time, and slower loss of tiredness when sleeping.",
     "icon": "/trait_icons/trait_insomniac.png",
     "skills": {},
     "excludes": []
@@ -163,7 +163,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Gardener",
     "cost": -2,
     "category": "Positive",
-    "description": "+1 Agriculture",
+    "description": "Has basic agriculture knowledge.\nIncreases the player's agriculture skill by 1 Improves foraging.",
     "icon": "/trait_icons/trait_gardener.png",
     "skills": {
       "agriculture": 1
@@ -175,7 +175,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Illiterate",
     "cost": 8,
     "category": "Negative",
-    "description": "Cannot read any books or in-world text.",
+    "description": "Cannot read books.\nUnable to get a mood boost by reading leisure books, learning new recipes by reading recipe magazines, or getting an XP multiplier by reading skill books.",
     "icon": "/trait_icons/trait_illiterate.png",
     "skills": {},
     "excludes": [
@@ -188,7 +188,7 @@ export const OFFICIAL_TRAITS = [
     "name": "High Thirst",
     "cost": 1,
     "category": "Negative",
-    "description": "Needs more water to survive.",
+    "description": "Needs more water to survive.\n100% more thirst.",
     "icon": "/trait_icons/trait_highthirst.png",
     "skills": {},
     "excludes": [
@@ -212,7 +212,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Short Sighted",
     "cost": 2,
     "category": "Negative",
-    "description": "Smaller view distance. Slower visibility fade. Weapon sights less effective.",
+    "description": "Small view distance. Slower visibility fade.\n-2 foraging radius in search mode. Can be negated with glasses and reading glasses.",
     "icon": "/trait_icons/trait_shortsighted.png",
     "skills": {},
     "excludes": [
@@ -224,7 +224,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Slow Healer",
     "cost": 3,
     "category": "Negative",
-    "description": "Recovers slowly from injuries and illness.",
+    "description": "Recovers slowly from injuries and illness.\nDoes not apply to exercise fatigue. Recently inflicted injuries have more severity. Including Scratches, Lacerations, Lodged Bullets, Deep wounds (with/without glass), Bites, and Fractures. (Check Health for more details.)",
     "icon": "/trait_icons/trait_slowhealer.png",
     "skills": {},
     "excludes": [
@@ -236,7 +236,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Gymnast",
     "cost": -5,
     "category": "Positive",
-    "description": "+1 Lightfooted +1 Nimble",
+    "description": "Agile and discreet.\n+1 Lightfooted +1 Nimble",
     "icon": "/trait_icons/trait_gymnast.png",
     "skills": {
       "lightfooted": 1,
@@ -249,7 +249,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Fast Metabolism",
     "cost": 2,
     "category": "Negative",
-    "description": "Permanent tendency to lose weight. Starts with Low Weight trait.",
+    "description": "Permanent tendency to lose weight. Starts with Low Weight trait.\n-",
     "icon": "/trait_icons/trait_weightloss.png",
     "skills": {},
     "excludes": [
@@ -261,7 +261,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Inventive",
     "cost": -2,
     "category": "Positive",
-    "description": "Has lower skill level requirements to research recipes from items or auto learn recipes.",
+    "description": "Has lower skill level requirements to research recipes from items or auto learn recipes.\n-",
     "icon": "/trait_icons/trait_inventive.png",
     "skills": {},
     "excludes": []
@@ -283,7 +283,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Crafty",
     "cost": -3,
     "category": "Positive",
-    "description": "Increased XP gains for Crafting skills.",
+    "description": "Increased XP gains for Crafting skills.\n130% XP for all crafting skills",
     "icon": "/trait_icons/trait_crafty.png",
     "skills": {},
     "excludes": [
@@ -296,7 +296,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Fast Learner",
     "cost": -6,
     "category": "Positive",
-    "description": "Increased XP gains.",
+    "description": "Increases XP gains.\n130% XP for all skills except Strength and Fitness.",
     "icon": "/trait_icons/trait_fastlearner.png",
     "skills": {},
     "excludes": [
@@ -309,7 +309,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Outdoorsy",
     "cost": -2,
     "category": "Positive",
-    "description": "Less affected by harsh weather conditions.",
+    "description": "Not affected by harsh weather conditions.\n10% chance of catching a cold. 1% or 1.25% chance of getting scratched/lacerated while walking or running through trees. Start a fire on campfires with Notched Plank faster Improves foraging.",
     "icon": "/trait_icons/trait_outdoorsman.png",
     "skills": {},
     "excludes": []
@@ -319,7 +319,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Smoker",
     "cost": 2,
     "category": "Negative",
-    "description": "Unhappiness rises when tobacco is not smoked. Stress and unhappiness decrease after smoking tobacco.",
+    "description": "Stress and unhappiness decrease after smoking tobacco. Unhappiness rises when tobacco is not smoked.\nStressed will constantly slowly rise. Smoking cigarettes will lower the stress level.",
     "icon": "/trait_icons/trait_smoker.png",
     "skills": {},
     "excludes": [
@@ -331,7 +331,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Iron Gut",
     "cost": -3,
     "category": "Positive",
-    "description": "Less chance to have food illness.",
+    "description": "Less chance to have food illness.\n50% chance of food illness. Food illness lasts shorter. Check Health for more details.",
     "icon": "/trait_icons/trait_irongut.png",
     "skills": {},
     "excludes": [
@@ -343,7 +343,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Hiker",
     "cost": -6,
     "category": "Positive",
-    "description": "+1 Foraging +1 Trapping",
+    "description": "Used to surviving in the jungle.\n+1 Foraging +1 Trapping Improves foraging.",
     "icon": "/trait_icons/trait_hiker.png",
     "skills": {
       "trapping": 1,
@@ -356,7 +356,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Nutritionist",
     "cost": -4,
     "category": "Positive",
-    "description": "Can see the nutritional values of any food.",
+    "description": "Can see the nutritional values of any food.\nAllows the player to see the nutritional values of any food, even those that aren't packaged. Improves foraging.",
     "icon": "/trait_icons/trait_nutritionist.png",
     "skills": {},
     "excludes": [
@@ -368,7 +368,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Keen Cook",
     "cost": 0,
     "category": "Negative",
-    "description": "Knows cooking recipes.",
+    "description": "Knows how to cook.\nImproves foraging.",
     "icon": "/trait_icons/trait_cook.png",
     "skills": {},
     "excludes": [
@@ -380,7 +380,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Organized",
     "cost": -4,
     "category": "Positive",
-    "description": "Increased container inventory capacity.",
+    "description": "Increased container inventory capacity.\n130% capacity for all containers, including boxes, cupboards and cars",
     "icon": "/trait_icons/trait_organized.png",
     "skills": {},
     "excludes": [
@@ -408,7 +408,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Fit",
     "cost": -6,
     "category": "Positive",
-    "description": "+2 Fitness",
+    "description": "In good physical shape.\n+2 Fitness.",
     "icon": "/trait_icons/trait_fit.png",
     "skills": {
       "fitness": 2
@@ -449,7 +449,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Puny",
     "cost": 10,
     "category": "Negative",
-    "description": "Far less knockback from melee weapons. Extremely small carrying weight. -5 Strength",
+    "description": "Less knockback from melee weapons. Decreased carrying weight.\n-5 Strength,-40% knockback power (damage does not decrease).",
     "icon": "/trait_icons/trait_weak.png",
     "skills": {
       "strength": -5
@@ -481,7 +481,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Low Thirst",
     "cost": -2,
     "category": "Positive",
-    "description": "Needs less water to survive.",
+    "description": "Needs to drink water less regularly.\n50% thirst.",
     "icon": "/trait_icons/trait_lowthirst.png",
     "skills": {},
     "excludes": [
@@ -505,7 +505,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Slow Metabolism",
     "cost": 2,
     "category": "Negative",
-    "description": "Permanent tendency to gain weight. Starts with High Weight trait.",
+    "description": "Permanent tendency to gain weight. Starts with High Weight trait.\n-",
     "icon": "/trait_icons/trait_weightgain.png",
     "skills": {},
     "excludes": [
@@ -517,7 +517,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Graceful",
     "cost": -4,
     "category": "Positive",
-    "description": "Makes less noise when moving.",
+    "description": "Makes less noise when moving.\n60% footsteps sound radius.",
     "icon": "/trait_icons/trait_graceful.png",
     "skills": {},
     "excludes": [
@@ -529,7 +529,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Former Scout",
     "cost": -6,
     "category": "Positive",
-    "description": "+1 First Aid +1 Fishing +1 Foraging",
+    "description": "Knows how to pick wild berries and how to treat small injuries.\n+1 First Aid +1 Foraging Improves foraging.",
     "icon": "/trait_icons/trait_formerscout.png",
     "skills": {
       "foraging": 1,
@@ -543,7 +543,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Ax-pert",
     "cost": 0,
     "category": "Negative",
-    "description": "Better at chopping trees. Faster axe swing.",
+    "description": "Better at chopping trees. Faster axe swing.\nSwing axes 25% faster (combat and tree cutting).",
     "icon": "/trait_icons/trait_axeman.png",
     "skills": {},
     "excludes": []
@@ -579,7 +579,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Conspicuous",
     "cost": 4,
     "category": "Negative",
-    "description": "More likely to be spotted by zombies.",
+    "description": "More likely to be spotted by zombies.\n200% chance of getting spotted by zombies.",
     "icon": "/trait_icons/trait_conspicuous.png",
     "skills": {},
     "excludes": [
@@ -591,7 +591,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Wilderness Knowledge",
     "cost": -8,
     "category": "Positive",
-    "description": "Can find medicinal herbs and craft medicines and poultices from them, and make simple stone and bone tools. +1 Carving +1 Foraging +1 Knapping +1 Maintenance",
+    "description": "Can find medicinal herbs and craft medicines and poultices from them, and make simple stone and bone tools.\n+1 Carving +1 Foraging +1 Knapping +1 Maintenance Affects Improves foraging.",
     "icon": "/trait_icons/trait_wildernessknowledge.png",
     "skills": {
       "knapping": 1,
@@ -606,7 +606,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Whittler",
     "cost": -2,
     "category": "Positive",
-    "description": "Can carve wood and bone items. +2 Carving",
+    "description": "Can carve wood and bone items.\n+2 Carving. Can craft Bone Fishing Hook, Bone Sewing Needle, and sharpen animal bones Improves foraging.",
     "icon": "/trait_icons/trait_whittler.png",
     "skills": {
       "carving": 2
@@ -618,7 +618,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Desensitized",
     "cost": 0,
     "category": "Negative",
-    "description": "Far less prone to panic.",
+    "description": "Does not reach states of panic.\n0% panic from all sources except nightmares\n200% chance to have nightmares.",
     "icon": "/trait_icons/trait_desensitized.png",
     "skills": {},
     "excludes": [
@@ -635,7 +635,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Deaf",
     "cost": 12,
     "category": "Negative",
-    "description": "Can't hear sound.",
+    "description": "Smaller perception radius and hearing range.\nCan't hear sound. Radio chatter will not appear above the radio. However, they can see/read a TV due to closed captions.",
     "icon": "/trait_icons/trait_deaf.png",
     "skills": {},
     "excludes": [
@@ -648,7 +648,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Burglar",
     "cost": 0,
     "category": "Negative",
-    "description": "Can hotwire vehicles. Less chance of breaking window locks.",
+    "description": "Can hotwire vehicles, less chance of breaking the lock of a window.\nCan hotwire vehicles and has less chance of breaking the lock of a window when forced open.",
     "icon": "/trait_icons/trait_burglar.png",
     "skills": {},
     "excludes": []
@@ -658,7 +658,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Sleepyhead",
     "cost": 4,
     "category": "Negative",
-    "description": "Needs more sleep.",
+    "description": "Needs more sleep.\n+30% Fatigue increase rate, -10% Sleep efficiency.",
     "icon": "/trait_icons/trait_needsmoresleep.png",
     "skills": {},
     "excludes": [
@@ -707,7 +707,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Cowardly",
     "cost": 2,
     "category": "Negative",
-    "description": "Especially prone to becoming panicked.",
+    "description": "Especially prone to becoming panicked.\n200% panic except for night terrors and phobias.",
     "icon": "/trait_icons/trait_cowardly.png",
     "skills": {},
     "excludes": [
@@ -733,7 +733,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Wakeful",
     "cost": -2,
     "category": "Positive",
-    "description": "Needs less sleep.",
+    "description": "Needs less sleep.\n-30% Fatigue increase rate, +10% Sleep efficiency",
     "icon": "/trait_icons/trait_needslesssleep.png",
     "skills": {},
     "excludes": [
@@ -745,7 +745,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Unfit",
     "cost": 10,
     "category": "Negative",
-    "description": "Very low endurance and endurance regeneration. -4 Fitness",
+    "description": "Very low endurance, very low endurance regeneration.\n-4 fitness",
     "icon": "/trait_icons/trait_unfit.png",
     "skills": {
       "fitness": -4
@@ -761,7 +761,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Inconspicuous",
     "cost": -4,
     "category": "Positive",
-    "description": "Less likely to be spotted by zombies.",
+    "description": "Less likely to be spotted by zombies.\n50% chance of zombies spotting you.",
     "icon": "/trait_icons/trait_inconspicuous.png",
     "skills": {},
     "excludes": [
@@ -773,7 +773,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Brawler",
     "cost": -6,
     "category": "Positive",
-    "description": "+1 Axe +1 Long Blunt",
+    "description": "Used to getting into trouble.\n+1 Axe +1 Long Blunt",
     "icon": "/trait_icons/trait_brawler.png",
     "skills": {
       "axe": 1,
@@ -786,7 +786,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Light Eater",
     "cost": -2,
     "category": "Positive",
-    "description": "Needs to eat less regularly.",
+    "description": "Needs to eat less regularly.\n75% hunger.",
     "icon": "/trait_icons/trait_lighteater.png",
     "skills": {},
     "excludes": [
@@ -799,7 +799,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Hearty Appetite",
     "cost": 4,
     "category": "Negative",
-    "description": "Needs to eat more regularly.",
+    "description": "Needs to eat more regularly.\n150% hunger. Gives a +3% bonus to packaged foods, mushrooms, berries, and animals for foraging.",
     "icon": "/trait_icons/trait_heartyappetite.png",
     "skills": {},
     "excludes": [
@@ -812,7 +812,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Reluctant Fighter",
     "cost": 4,
     "category": "Negative",
-    "description": "Decreased combat XP gains.",
+    "description": "Less effective with weapons.\n75% of skill XP for short blade, long blade, small blunt, long blunt, axe, spear, maintenance and aiming.",
     "icon": "/trait_icons/trait_pacifist.png",
     "skills": {},
     "excludes": []
@@ -822,7 +822,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Fast Reader",
     "cost": -2,
     "category": "Positive",
-    "description": "Takes less time to read books.",
+    "description": "Takes less time to read books.\n130% reading speed.",
     "icon": "/trait_icons/trait_fastreader.png",
     "skills": {},
     "excludes": [
@@ -834,7 +834,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Runner",
     "cost": -4,
     "category": "Positive",
-    "description": "+1 Running",
+    "description": "Runner in the spare times.\n+1 Running",
     "icon": "/trait_icons/trait_jogger.png",
     "skills": {
       "running": 1
@@ -846,7 +846,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Eagle Eyed",
     "cost": -4,
     "category": "Positive",
-    "description": "Faster visibility fade. Higher visibility arc. Weapon sights more effective at long range.",
+    "description": "Has a faster visibility fade and a higher visibility arc.\nCharacter has a wider field of view Improves foraging.",
     "icon": "/trait_icons/trait_eagleeyed.png",
     "skills": {},
     "excludes": [
@@ -871,7 +871,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Thin-skinned",
     "cost": 8,
     "category": "Negative",
-    "description": "Higher chance of being scratched or bitten by zombies.",
+    "description": "Increased chance of scratches, lacerations, or bites breaking the skin.\nMultiplies the chance of not being injured by a zombie attack by 0.7 (base 15% chance, modified by character's weapon skill). Additionally, alters the chance of clothes being damaged by walking through trees to 1 in 3.",
     "icon": "/trait_icons/trait_thinskinned.png",
     "skills": {},
     "excludes": [
@@ -899,7 +899,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Adrenaline Junkie",
     "cost": -4,
     "category": "Positive",
-    "description": "Moves faster when highly panicked.",
+    "description": "Moves faster when highly panicked.\nAdds a flat bonus of 0.20 or 0.25 for the character's base speed at Strong or Extreme Panic, which increases walking, running, and sprinting speed.",
     "icon": "/trait_icons/trait_adrenalinejunkie.png",
     "skills": {},
     "excludes": [
@@ -914,7 +914,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Athletic",
     "cost": -10,
     "category": "Positive",
-    "description": "Faster running speed. Can run for longer without tiring. +4 Fitness",
+    "description": "Can run faster and longer without tiring.\n+4 Fitness. +20% running/sprinting speed. -20% running/sprinting endurance loss from the trait itself.",
     "icon": "/trait_icons/trait_athletic.png",
     "skills": {
       "fitness": 4
@@ -934,7 +934,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Keen Hearing",
     "cost": -6,
     "category": "Positive",
-    "description": "Larger perception radius.",
+    "description": "Larger perception radius.\n200% perception radius. Zombies that approach from behind will be visible much earlier.",
     "icon": "/trait_icons/trait_keenhearing.png",
     "skills": {},
     "excludes": [
@@ -957,7 +957,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Sewer",
     "cost": -4,
     "category": "Positive",
-    "description": "+1 Tailoring",
+    "description": "+1 Tailoring\n+1 Tailoring",
     "icon": "/trait_icons/trait_tailor.png",
     "skills": {
       "tailoring": 1
@@ -969,7 +969,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Blacksmith Knowledge",
     "cost": 0,
     "category": "Negative",
-    "description": "Can use an anvil to create metal items.",
+    "description": "Can use an anvil to create metal items.\nAllows using anvils.",
     "icon": "/trait_icons/trait_blacksmith.png",
     "skills": {},
     "excludes": [
@@ -981,7 +981,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Handy",
     "cost": -8,
     "category": "Positive",
-    "description": "Faster and stronger constructions. +1 Carpentry +1 Carving +1 Maintenance +1 Masonry",
+    "description": "Faster and stronger constructions.\n+1 Carpentry +1 Maintenance +100HP to all constructions. Increases building speed (≈11%).",
     "icon": "/trait_icons/trait_handy.png",
     "skills": {
       "carpentry": 1,
@@ -996,7 +996,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Sunday Driver",
     "cost": 1,
     "category": "Negative",
-    "description": "Drives very slow.",
+    "description": "The very slow driver.\nAccelerates vehicles 40% slower. Has a max speed of 30 km/h.",
     "icon": "/trait_icons/trait_sundaydriver.png",
     "skills": {},
     "excludes": [
@@ -1008,7 +1008,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Short of Breath",
     "cost": 5,
     "category": "Negative",
-    "description": "Faster endurance loss.",
+    "description": "Faster endurance loss.\n140% running/sprinting endurance loss. 130% increase in swing endurance lost.",
     "icon": "/trait_icons/trait_asthmatic.png",
     "skills": {},
     "excludes": []
@@ -1033,7 +1033,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Fear of Blood",
     "cost": 5,
     "category": "Negative",
-    "description": "Panic when performing first aid on self. Cannot perform first aid on others. Gets stressed when bloody.",
+    "description": "Panic when performing first aid on self, cannot perform first aid on others, gets stressed when bloody.\n-",
     "icon": "/trait_icons/trait_hemophobic.png",
     "skills": {},
     "excludes": [
@@ -1045,7 +1045,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Herbalist",
     "cost": -4,
     "category": "Positive",
-    "description": "Can find medicinal herbs and craft medicines and poultices from them. +1 Foraging",
+    "description": "Can find medicinal plants and craft medicines and poultices from them.\n+1 Foraging. Able to find herbal medicines, make poultices from them, and identify poisonous wild food. Improves foraging.",
     "icon": "/trait_icons/trait_herbalist.png",
     "skills": {
       "foraging": 1
@@ -1073,7 +1073,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Claustrophobic",
     "cost": 4,
     "category": "Negative",
-    "description": "Gets panicked when in small indoor rooms.",
+    "description": "Gets panicked when indoors.\nPanic increases when indoors.",
     "icon": "/trait_icons/trait_claustrophobic.png",
     "skills": {},
     "excludes": [
@@ -1088,7 +1088,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Prone to Illness",
     "cost": 4,
     "category": "Negative",
-    "description": "More prone to disease. Faster rate of zombification.",
+    "description": "More prone to disease. Faster rate of zombification.\n125% progression rate of zombification. 170% chance of catching a cold, 120% cold strength, and 150% cold progression speed.",
     "icon": "/trait_icons/trait_pronetoillness.png",
     "skills": {},
     "excludes": [
@@ -1100,7 +1100,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Hunter",
     "cost": -8,
     "category": "Positive",
-    "description": "+1 Aiming +1 Butchering +1 Short Blade +1 Sneaking +1 Trapping",
+    "description": "Know the basics of hunting.\n+1 Aiming +1 Short Blade +1 Sneaking +1 Trapping Improves foraging.",
     "icon": "/trait_icons/trait_hunter.png",
     "skills": {
       "trapping": 1,
@@ -1116,7 +1116,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Baseball Player",
     "cost": -4,
     "category": "Positive",
-    "description": "+1 Long Blunt",
+    "description": "Has practice with a baseball bat and knows how to hit with precision.\n+1 Long Blunt",
     "icon": "/trait_icons/trait_baseballplayer.png",
     "skills": {
       "long blunt": 1
@@ -1128,7 +1128,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Cat's Eyes",
     "cost": -2,
     "category": "Positive",
-    "description": "Better vision at night.",
+    "description": "Better vision at night.\n+20% better vision at night Improves foraging.",
     "icon": "/trait_icons/trait_nightvision.png",
     "skills": {},
     "excludes": []
@@ -1138,7 +1138,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Speed Demon",
     "cost": -1,
     "category": "Positive",
-    "description": "Drives very fast.",
+    "description": "The fast driver.\n200% Gear switching speed, 115% top speed for all vehicles",
     "icon": "/trait_icons/trait_speeddemon.png",
     "skills": {},
     "excludes": [
@@ -1150,7 +1150,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Resilient",
     "cost": -4,
     "category": "Positive",
-    "description": "Less prone to disease. Slower rate of zombification.",
+    "description": "Less prone to disease. Slower rate of zombification.\n75% zombification progression rate, 45% chance of catching a cold, 80% cold strength and 50% cold progression speed.",
     "icon": "/trait_icons/trait_resilient.png",
     "skills": {},
     "excludes": [
@@ -1162,7 +1162,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Angler",
     "cost": -4,
     "category": "Positive",
-    "description": "+1 Fishing",
+    "description": "Knows the basics of fishing.\n+1 Fishing Knows how to make and fix a fishing rod Improves foraging.",
     "icon": "/trait_icons/trait_fishing.png",
     "skills": {
       "fishing": 1
@@ -1174,7 +1174,7 @@ export const OFFICIAL_TRAITS = [
     "name": "Hard of Hearing",
     "cost": 4,
     "category": "Negative",
-    "description": "Smaller perception radius. Smaller hearing range.",
+    "description": "Smaller perception radius. Smaller hearing range.\nBesides the decreased perception radius, the range of sound will be decreased, and the sound effects will be muffled.",
     "icon": "/trait_icons/trait_hardofhearing.png",
     "skills": {},
     "excludes": [
@@ -1214,7 +1214,7 @@ export const OFFICIAL_TRAITS = [
     "name": "First Aider",
     "cost": -4,
     "category": "Positive",
-    "description": "+1 First Aid",
+    "description": "Has a CPR and First Aid course certificate.\n+1 First Aid",
     "icon": "/trait_icons/trait_firstaid.png",
     "skills": {
       "first aid": 1

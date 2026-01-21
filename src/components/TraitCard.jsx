@@ -151,8 +151,17 @@ const TraitCard = ({ trait, isSelected, onToggle, conflictsWith, isLocked, index
             <h4 className={`font-bold text-xs leading-tight truncate ${isSelected ? 'text-slate-950' : 'text-slate-200 group-hover:text-white'}`}>
               {trait.name}
               {isConflicted && conflictsWith.length > 0 && (
-                <span className="ml-1.5 text-[9px] text-red-400 font-medium whitespace-nowrap  group-hover:opacity-100 transition-opacity">
-                  ({conflictsWith.join(', ')})
+                <span className="ml-1.5 text-[9px] font-medium whitespace-nowrap opacity-70 group-hover:opacity-100 transition-opacity">
+                  <span className="text-slate-500 mr-0.5">(</span>
+                  {conflictsWith.map((c, idx) => (
+                    <React.Fragment key={idx}>
+                      <span className={c.category === 'Positive' ? 'text-emerald-500' : 'text-red-500'}>
+                        {c.name}
+                      </span>
+                      {idx < conflictsWith.length - 1 && <span className="text-slate-500">, </span>}
+                    </React.Fragment>
+                  ))}
+                  <span className="text-slate-500 ml-0.5">)</span>
                 </span>
               )}
             </h4>

@@ -1,3 +1,1 @@
-- merge old vanilla traits descriptions with new ones
-- check images
 - tooltip positioning

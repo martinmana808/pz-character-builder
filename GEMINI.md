@@ -10,6 +10,13 @@ A single-page React application for building Project Zomboid characters for a sp
 - State Management: React Context / Local State
 
 ## History
+### [2026-01-21] Trait Refinement & Security Pass | [Technical Details](./GEMINI--logs.md#log-20260121-trait-refinement)
+- Implemented name-based trait locking to prevent duplicates (e.g., Keen Cook) between profession and chosen lists.
+- Refined sorting: newly added profession traits (like Desensitized) move to top; native positives stay in place.
+- Displayed conflict sources directly on disabled trait cards for better UX.
+- Standardized 1000+ trait icon paths to unified `/trait_icons/` format.
+- Removed sensitive keys and pushed sanitized codebase to GitHub.
+
 ### [2026-01-21] Trait Exclusions Fix | [Technical Details](./GEMINI--logs.md#log-20260121-trait-exclusions-fix)
 - Implemented bidirectional conflict logic to handle mutual exclusions (e.g., Fast vs Slow Reader).
 - Added visual feedback (dimming + not-allowed cursor) for excluded traits.
