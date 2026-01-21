@@ -10,6 +10,11 @@ A single-page React application for building Project Zomboid characters for a sp
 - State Management: React Context / Local State
 
 ## History
+### [2026-01-21] Trait Data Merge & UI Polish | [Technical Details](./GEMINI--logs.md#log-20260121-desc-merge)
+- Merged detailed trait descriptions from `vanillaData.js` into the core `officialGameData.js` (73 traits updated).
+- Implemented colored conflict source display: Green for positive trait conflicts, Red for negative.
+- Refined UI styling for "Points to Spend" and Occupation descriptions.
+
 ### [2026-01-21] Trait Refinement & Security Pass | [Technical Details](./GEMINI--logs.md#log-20260121-trait-refinement)
 - Implemented name-based trait locking to prevent duplicates (e.g., Keen Cook) between profession and chosen lists.
 - Refined sorting: newly added profession traits (like Desensitized) move to top; native positives stay in place.

@@ -318,3 +318,20 @@ The application has been initialized and implemented as a React + Vite project.
 - [x] Verify no duplicate entries for "Keen Cook" appear.
 - [x] Confirm padlock icons appear in both main list and Summary Panel.
 - [x] Successfully pushed to https://github.com/martinmana808/pz-character-builder.
+
+<a name="log-20260121-desc-merge"></a>
+# Task: Trait Data Merge & UI Polish
+**User Prompt:** "check the TRAIT DESCRIPTION on vanillaData.js and see if we can either MERGE or replace... color the title of traits excluding a particular trait: green if positive, red if negative."
+
+## Implementation Plan
+1. **Description Merge**: Created a robust script to match traits by name across `officialGameData.js` and `vanillaData.js`. For matched traits, the description was updated if the vanilla version was more detailed. (73 traits updated).
+2. **Colored Conflicts**: Modified `getConflicts` in `App.jsx` to return both name and category. Updated `TraitCard.jsx` to map through these conflicts and apply conditional styling (emerald for positive, red for negative).
+3. **UI Styling**: Applied user-requested refinements to `SummaryPanel.jsx`:
+    - Reduced red background opacity for negative points balance (`bg-red-900/20`).
+    - Changed occupation description color and opacity (`text-slate-500 opacity-80`).
+
+## Walkthrough
+- [x] Select "Slow Learner". Verify description includes "70% XP in all skills...".
+- [x] Select "Fast Reader". Verify "Slow Reader" shows "(Conflicts with: Fast Reader)" where the trait name is emerald green.
+- [x] Verify "Points to Spend" box has a cleaner translucent red background when in deficit.
+- [x] Checked `officialGameData.js` and confirmed descriptions are updated verbatim from forensic vanilla sources.
