@@ -127,11 +127,11 @@ const TraitCard = ({ trait, isSelected, onToggle, conflictsWith, isLocked, index
         ${isConflicted ? '!cursor-not-allowed !opacity-30  bg-slate-950 border-slate-900 hover:!opacity-30 hover:border-slate-900 hover:bg-slate-950' : ''}
         ${isSelected 
           ? (isPositive || isLocked)
-            ? 'selected bg-emerald-400 border-emerald-500' 
-            : 'selected bg-red-400 border-red-500'
+            ? 'selected !bg-emerald-400 !border-emerald-500 !opacity-100' 
+            : 'selected !bg-red-400 !border-red-500 !opacity-100'
           : 'bg-slate-900 border-slate-800/60 hover:border-slate-600 hover:bg-slate-800'
         }
-        ${isLocked ? '!cursor-not-allowed opacity-80 ring-1 ring-black/10' : ''}
+        ${isLocked ? '!cursor-not-allowed ' : ''}
         ${showDynamicWarning ? 'border-amber-500/80 ring-1 ring-amber-500/30' : ''}
         ${showDynamicAdvice ? 'border-lime-500/80 ring-1 ring-lime-500/30' : ''}
       `}
