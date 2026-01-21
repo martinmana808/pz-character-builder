@@ -39,7 +39,7 @@ const TraitCard = ({ trait, isSelected, onToggle, conflictsWith, isLocked, index
   const isImagePath = trait.icon?.startsWith('/') || trait.icon?.includes('.');
 
   // Conflict state
-  const isConflicted = conflictsWith && conflictsWith.length > 0;
+  const isConflicted = !isLocked && conflictsWith && conflictsWith.length > 0;
 
   // Warning logic
   const showDynamicWarning = isSelected && isDynamic && isPositive;
