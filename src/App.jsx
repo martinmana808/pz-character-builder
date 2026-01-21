@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, X, ChevronDown, ChevronRight } from 'lucide-react';
 import Layout from './components/Layout';
 import OccupationCard from './components/OccupationCard';
 import TraitCard from './components/TraitCard';
@@ -7,12 +7,23 @@ import SummaryPanel from './components/SummaryPanel';
 import SkillsPanel from './components/SkillsPanel';
 import { OFFICIAL_TRAITS, OFFICIAL_OCCUPATIONS } from './data/officialGameData';
 import DatabaseView from './components/DatabaseView';
+import SettingsBar from './components/SettingsBar';
 
 // We'll keep these for fallback or if specific Dynamic mode data is still needed
 import { ALL_OCCUPATIONS as DYNAMIC_OCCUPATIONS } from './data/occupations';
 import { FULL_TRAITS as DYNAMIC_TRAITS } from './data/fullGameData';
 
 function App() {
+  const [collapsed, setCollapsed] = useState({ 
+    occupations: false, 
+    positive: false, 
+    negative: false, 
+    build: false 
+  });
+
+  const toggleSection = (section) => {
+    setCollapsed(prev => ({ ...prev, [section]: !prev[section] }));
+  };
   // Initialize state from URL if present
   const params = new URLSearchParams(window.location.search);
   const urlMode = params.get('mode');
@@ -124,8 +135,8 @@ function App() {
     if (occupation.freeTraits) {
       occupation.freeTraits.forEach(traitId => {
         const trait = OFFICIAL_TRAITS.find(t => t.id === traitId) || DYNAMIC_TRAITS.find(t => t.id === traitId);
-        // Only add if not already there (prevent dupes)
-        if (trait && !nextTraits.some(nt => nt.id === trait.id)) {
+        // Only add if not already there by ID AND not already there by NAME
+        if (trait && !nextTraits.some(nt => nt.id === trait.id || nt.name === trait.name)) {
           nextTraits.push(trait);
         }
       });
@@ -208,14 +219,29 @@ function App() {
   };
 
   const positiveTraits = useMemo(() => {
-    // 1. Get base positive traits
-    let list = TRAITS.filter(t => t.category === 'Positive' && (t.cost !== 0 || selectedTraits.some(st => st.id === t.id)));
+    // 1. Get base traits
+    let list = TRAITS.filter(t => {
+      // If it's a negative trait and NOT locked (unselected), it doesn't belong here
+      if (t.category === 'Negative' && !selectedTraits.some(st => st.id === t.id)) return false;
+      
+      // If cost is 0 and it's not selected, it's just clutter (unless it's an occupation trait we'll add in step 2)
+      if (t.cost === 0 && !selectedTraits.some(st => st.id === t.id)) return false;
 
-    // 2. Add free traits from occupation ONLY if they aren't already represented by name
+      // CRITICAL: If this trait has the same name as one of the occupation's free traits,
+      // but it's NOT the specific ID used by the occupation, filter it out.
+      // E.g. skip Nutritionist (-4) if Fitness Instructor gives Nutritionist (0).
+      if (freeTraitNames.has(t.name) && !selectedOccupation?.freeTraits?.includes(t.id)) {
+        return false;
+      }
+
+      return true;
+    });
+
+    // 2. Add free traits from occupation if not already present
     if (selectedOccupation?.freeTraits) {
         selectedOccupation.freeTraits.forEach(traitId => {
             const traitObj = OFFICIAL_TRAITS.find(t => t.id === traitId) || DYNAMIC_TRAITS.find(t => t.id === traitId);
-            if (traitObj && !list.some(t => t.name === traitObj.name)) {
+            if (traitObj && !list.some(t => t.id === traitObj.id)) {
                 list.push(traitObj);
             }
         });
@@ -224,19 +250,8 @@ function App() {
     // 3. Search filter
     list = list.filter(t => t.name.toLowerCase().includes(positiveQuery.toLowerCase()));
 
-    // 4. Custom Sort: ONLY move to top if it's "New" (Category !== Positive)
-    return list.sort((a, b) => {
-        const isALocked = isTraitLocked(a);
-        const isBLocked = isTraitLocked(b);
-        
-        const isAAdded = isALocked && a.category !== 'Positive';
-        const isBAdded = isBLocked && b.category !== 'Positive';
-
-        if (isAAdded && !isBAdded) return -1;
-        if (!isAAdded && isBAdded) return 1;
-        
-        return sortTraits(a, b);
-    });
+    // 4. Sort strictly by cost magnitude, then name
+    return list.sort(sortTraits);
   }, [TRAITS, selectedOccupation, selectedTraits, positiveQuery, freeTraitNames]);
 
   const negativeTraits = useMemo(() => {
@@ -258,146 +273,205 @@ function App() {
             onDataModeChange={handleModeChange}
         />
       ) : (
-      <>
-      <div className="grid grid-cols-12 gap-2 px-2 py-4 h-dvh overflow-hidden bg-slate-950">
+      <div className="flex flex-col lg:grid lg:grid-cols-12 gap-2 px-0 lg:px-2 py-0 lg:py-4 min-h-screen lg:h-dvh lg:overflow-hidden bg-slate-950">
         
+        {/* Mobile Settings Bar */}
+        <SettingsBar 
+          currentView={view} 
+          onViewChange={setView} 
+          currentDataMode={dataMode} 
+          onDataModeChange={handleModeChange} 
+          onReset={resetBuild}
+        />
+
         {/* Col 1: Occupations */}
-        <div className="col-span-12 lg:col-span-2 custom-scrollbar   border-slate-900 h-full overflow-hidden">
-          <div className='h-full overflow-hidden min-h-0 flex flex-col'>
-           <h3 className="text-xs uppercase text-slate-500 font-bold pb-2  top-0 bg-slate-950 z-20 shrink-0">Occupations</h3>
-           <div className='overflow-y-auto custom-scrollbar flex-1 pr-1'>
-             {OCCUPATIONS.map(occ => (
-               <OccupationCard 
-                 key={occ.id} 
-                 occupation={occ} 
-                 isSelected={selectedOccupation?.id === occ.id}
-                 onSelect={handleOccupationSelect}
-               />
-             ))}
-           </div>
+        <div className={`col-span-12 lg:col-span-2 border-slate-900 overflow-hidden flex flex-col ${collapsed.occupations ? 'h-auto' : 'h-full'}`}>
+          <div 
+            onClick={() => window.innerWidth < 1024 && toggleSection('occupations')}
+            className="flex justify-between items-center px-4 py-3 lg:p-0 lg:pb-2  top-[var(--mobile-settings-h)] lg:static bg-slate-950 z-30 cursor-pointer lg:cursor-default border-b border-slate-900 lg:border-none"
+          >
+            <h3 className="text-xs uppercase text-slate-500 font-bold">Occupations</h3>
+            <div className="lg:hidden text-slate-600">
+              {collapsed.occupations ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
+            </div>
           </div>
+          
+           {!collapsed.occupations && (
+            <div className='overflow-y-auto custom-scrollbar flex-1 pr-1 px-4 lg:px-0 lg:pr-1 py-2 lg:py-0'>
+              {OCCUPATIONS.map(occ => (
+                <OccupationCard 
+                  key={occ.id} 
+                  occupation={occ} 
+                  isSelected={selectedOccupation?.id === occ.id}
+                  onSelect={handleOccupationSelect}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Col 2: Traits */}
-        <div className="col-span-12 lg:col-span-7 h-full flex gap-2 overflow-hidden px-2 min-h-0">
+        {/* Traits Container */}
+        <div className="col-span-12 lg:col-span-7 flex flex-col lg:flex-row gap-2 lg:overflow-hidden lg:px-2 min-h-0">
            
            {/* Positive Traits Column */}
-           <div className="flex-1 flex flex-col h-full overflow-hidden min-h-0">
-                <div className="bg-slate-950 z-20 pb-2  shrink-0">
-                    <h3 className="text-xs uppercase text-slate-500 font-bold mb-2 flex justify-between items-center">
-                        <span>{dataMode === 'vanilla' ? 'Positive Traits' : 'Positive Traits'}</span>
-                        <span className="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-600">Cost Points</span>
-                    </h3>
-                    <div className="relative group/search">
-                        <Search className="absolute left-2 top-1.5 w-3 h-3 text-slate-500" />
-                        <input 
-                            type="text" 
-                            placeholder="Search..." 
-                            value={positiveQuery}
-                            onChange={(e) => setPositiveQuery(e.target.value)}
-                            className="w-full bg-slate-900 border border-slate-800/60 rounded text-xs py-1 pl-7 pr-7 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-slate-700 transition-colors"
-                        />
-                        {positiveQuery && (
-                            <button 
-                                onClick={() => setPositiveQuery('')}
-                                className="absolute right-2 top-1.5 p-0.5 rounded-sm hover:bg-slate-800 text-slate-500 hover:text-slate-300 transition-colors"
-                            >
-                                <X className="w-3 h-3" />
-                            </button>
-                        )}
+           <div className={`flex-1 flex flex-col lg:h-full lg:overflow-hidden min-h-0 ${collapsed.positive ? 'h-auto' : ''}`}>
+                <div 
+                  onClick={() => window.innerWidth < 1024 && toggleSection('positive')}
+                  className="bg-slate-950 px-4 py-3 lg:p-0 lg:pb-2 sticky top-[calc(var(--mobile-settings-h)+var(--mobile-title-h))] lg:static z-30 shrink-0 cursor-pointer lg:cursor-default border-b border-slate-900 lg:border-none"
+                >
+                    <div className="flex justify-between items-center mb-1">
+                      <h3 className="text-xs uppercase text-slate-500 font-bold flex items-center gap-2">
+                          <span>Positive Traits</span>
+                          <span className="hidden lg:inline text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-600">Cost Points</span>
+                      </h3>
+                      <div className="lg:hidden text-slate-600 flex items-center gap-4">
+                        <span className="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-600 uppercase">Cost Points</span>
+                        {collapsed.positive ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
+                      </div>
                     </div>
                 </div>
                 
-                <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 pt-2 grid grid-cols-1 gap-1 content-start">
-                       {positiveTraits.map(trait => {
-                         const allConflicts = getConflicts(trait);
-                         const isLocked = isTraitLocked(trait);
-                         return (
-                           <TraitCard 
-                             key={trait.id} 
-                             trait={trait} 
-                             isSelected={isLocked || selectedTraits.some(t => t.id === trait.id)}
-                             isLocked={isLocked}
-                             onToggle={handleTraitToggle}
-                             conflictsWith={allConflicts}
-                             index={positiveTraits.indexOf(trait)}
-                             totalCount={positiveTraits.length}
-                           />
-                         );
-                       })}
-                </div>
+                {!collapsed.positive && (
+                  <div className="flex flex-col lg:flex-1 min-h-0">
+                    <div className="px-4 lg:px-0 pb-2">
+                       <div className="relative group/search">
+                          <Search className="absolute left-2 top-1.5 w-3 h-3 text-slate-500" />
+                          <input 
+                              type="text" 
+                              placeholder="Search..." 
+                              value={positiveQuery}
+                              onChange={(e) => setPositiveQuery(e.target.value)}
+                              className="w-full bg-slate-900 border border-slate-800/60 rounded text-xs py-1 pl-7 pr-7 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-slate-700 transition-colors"
+                          />
+                          {positiveQuery && (
+                              <button 
+                                  onClick={() => setPositiveQuery('')}
+                                  className="absolute right-2 top-1.5 p-0.5 rounded-sm hover:bg-slate-800 text-slate-500 hover:text-slate-300 transition-colors"
+                              >
+                                  <X className="w-3 h-3" />
+                              </button>
+                          )}
+                      </div>
+                    </div>
+                    <div className="lg:flex-1 lg:overflow-y-auto custom-scrollbar pr-1 pt-2 grid grid-cols-1 gap-1 content-start px-4 lg:px-0 lg:pr-1 pb-4">
+                           {positiveTraits.map(trait => {
+                             const allConflicts = getConflicts(trait);
+                             const isLocked = isTraitLocked(trait);
+                             return (
+                               <TraitCard 
+                                 key={trait.id} 
+                                 trait={trait} 
+                                 isSelected={isLocked || selectedTraits.some(t => t.id === trait.id)}
+                                 isLocked={isLocked}
+                                 onToggle={handleTraitToggle}
+                                 conflictsWith={allConflicts}
+                                 index={positiveTraits.indexOf(trait)}
+                                 totalCount={positiveTraits.length}
+                               />
+                             );
+                           })}
+                    </div>
+                  </div>
+                )}
            </div>
 
            {/* Negative Traits Column */}
-           <div className="flex-1 flex flex-col h-full overflow-hidden min-h-0">
-                <div className="bg-slate-950 z-20 pb-2  shrink-0">
-                   <h3 className="text-xs uppercase text-slate-500 font-bold mb-2 flex justify-between items-center">
-                       <span>Negative Traits</span>
-                        <span className="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-600">Give Points</span>
-                    </h3>
-                    <div className="relative group/search">
-                        <Search className="absolute left-2 top-1.5 w-3 h-3 text-slate-500" />
-                        <input 
-                            type="text" 
-                            placeholder="Search..." 
-                            value={negativeQuery}
-                            onChange={(e) => setNegativeQuery(e.target.value)}
-                            className="w-full bg-slate-900 border border-slate-800/60 rounded text-xs py-1 pl-7 pr-7 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-slate-700 transition-colors"
-                        />
-                        {negativeQuery && (
-                            <button 
-                                onClick={() => setNegativeQuery('')}
-                                className="absolute right-2 top-1.5 p-0.5 rounded-sm hover:bg-slate-800 text-slate-500 hover:text-slate-300 transition-colors"
-                            >
-                                <X className="w-3 h-3" />
-                            </button>
-                        )}
+           <div className={`flex-1 flex flex-col lg:h-full lg:overflow-hidden min-h-0 ${collapsed.negative ? 'h-auto' : ''}`}>
+                <div 
+                  onClick={() => window.innerWidth < 1024 && toggleSection('negative')}
+                  className="bg-slate-950 px-4 py-3 lg:p-0 lg:pb-2 sticky top-[calc(var(--mobile-settings-h)+2*var(--mobile-title-h))] lg:static z-30 shrink-0 cursor-pointer lg:cursor-default border-b border-slate-900 lg:border-none"
+                >
+                   <div className="flex justify-between items-center mb-1">
+                      <h3 className="text-xs uppercase text-slate-500 font-bold flex items-center gap-2">
+                          <span>Negative Traits</span>
+                          <span className="hidden lg:inline text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-600">Give Points</span>
+                      </h3>
+                      <div className="lg:hidden text-slate-600 flex items-center gap-4">
+                        <span className="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-600 uppercase">Give Points</span>
+                        {collapsed.negative ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
+                      </div>
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 pt-2 grid grid-cols-1 gap-1 content-start">
-                       {negativeTraits.map(trait => {
-                         const allConflicts = getConflicts(trait);
-                         const isLocked = isTraitLocked(trait);
-                         return (
-                           <TraitCard 
-                             key={trait.id} 
-                             trait={trait} 
-                             isSelected={isLocked || selectedTraits.some(t => t.id === trait.id)}
-                             isLocked={isLocked}
-                             onToggle={handleTraitToggle}
-                             conflictsWith={allConflicts}
-                             index={negativeTraits.indexOf(trait)}
-                             totalCount={negativeTraits.length}
-                           />
-                         );
-                       })}
-                </div>
+                {!collapsed.negative && (
+                  <div className="flex flex-col lg:flex-1 min-h-0">
+                    <div className="px-4 lg:px-0 pb-2">
+                       <div className="relative group/search">
+                          <Search className="absolute left-2 top-1.5 w-3 h-3 text-slate-500" />
+                          <input 
+                              type="text" 
+                              placeholder="Search..." 
+                              value={negativeQuery}
+                              onChange={(e) => setNegativeQuery(e.target.value)}
+                              className="w-full bg-slate-900 border border-slate-800/60 rounded text-xs py-1 pl-7 pr-7 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-slate-700 transition-colors"
+                          />
+                          {negativeQuery && (
+                              <button 
+                                  onClick={() => setNegativeQuery('')}
+                                  className="absolute right-2 top-1.5 p-0.5 rounded-sm hover:bg-slate-800 text-slate-500 hover:text-slate-300 transition-colors"
+                              >
+                                  <X className="w-3 h-3" />
+                              </button>
+                          )}
+                      </div>
+                    </div>
+                    <div className="lg:flex-1 lg:overflow-y-auto custom-scrollbar pr-1 pt-2 grid grid-cols-1 gap-1 content-start px-4 lg:px-0 lg:pr-1 pb-4">
+                           {negativeTraits.map(trait => {
+                             const allConflicts = getConflicts(trait);
+                             const isLocked = isTraitLocked(trait);
+                             return (
+                               <TraitCard 
+                                 key={trait.id} 
+                                 trait={trait} 
+                                 isSelected={isLocked || selectedTraits.some(t => t.id === trait.id)}
+                                 isLocked={isLocked}
+                                 onToggle={handleTraitToggle}
+                                 conflictsWith={allConflicts}
+                                 index={negativeTraits.indexOf(trait)}
+                                 totalCount={negativeTraits.length}
+                               />
+                             );
+                           })}
+                    </div>
+                  </div>
+                )}
            </div>
         </div>
 
         {/* Col 3: Summary & Skills */}
-        <div className="col-span-12 lg:col-span-3 pr-1  border-slate-900 h-full overflow-y-auto custom-scrollbar flex flex-col gap-4">
-          <SummaryPanel 
-            points={points} 
-            selectedOccupation={selectedOccupation}
-            selectedTraits={selectedTraits}
-            onReset={resetBuild}
-            onRemoveTrait={handleTraitToggle}
+        <div className={`col-span-12 lg:col-span-3 lg:pr-1 border-slate-900 lg:h-full lg:overflow-y-auto custom-scrollbar flex flex-col gap-4 ${collapsed.build ? 'h-auto' : ''}`}>
+          <div 
+             onClick={() => window.innerWidth < 1024 && toggleSection('build')}
+             className="lg:hidden flex justify-between items-center px-4 py-3 sticky top-[calc(var(--mobile-settings-h)+3*var(--mobile-title-h))] bg-slate-950 z-30 cursor-pointer border-b border-slate-900"
+          >
+            <h3 className="text-xs uppercase text-slate-500 font-bold">Character Build</h3>
+            <div className="text-slate-600">
+              {collapsed.build ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
+            </div>
+          </div>
 
-            skills={calculateSkills(selectedOccupation, selectedTraits)}
-            currentView={view}
-            onViewChange={setView}
-            currentDataMode={dataMode}
-            onDataModeChange={handleModeChange}
-            isTraitLocked={isTraitLocked}
-          />
-          <SkillsPanel skills={calculateSkills(selectedOccupation, selectedTraits)} />
+          {!collapsed.build && (
+            <div className="flex flex-col gap-4 px-4 lg:px-0 pb-8 lg:pb-0 pt-2 lg:pt-0">
+              <SummaryPanel 
+                points={points} 
+                selectedOccupation={selectedOccupation}
+                selectedTraits={selectedTraits}
+                onReset={resetBuild}
+                onRemoveTrait={handleTraitToggle}
+
+                skills={calculateSkills(selectedOccupation, selectedTraits)}
+                currentView={view}
+                onViewChange={setView}
+                currentDataMode={dataMode}
+                onDataModeChange={handleModeChange}
+                isTraitLocked={isTraitLocked}
+              />
+              <SkillsPanel skills={calculateSkills(selectedOccupation, selectedTraits)} />
+            </div>
+          )}
         </div>
 
       </div>
-
-      </>
       )}
     </Layout>
   );

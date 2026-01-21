@@ -335,3 +335,270 @@ The application has been initialized and implemented as a React + Vite project.
 - [x] Select "Fast Reader". Verify "Slow Reader" shows "(Conflicts with: Fast Reader)" where the trait name is emerald green.
 - [x] Verify "Points to Spend" box has a cleaner translucent red background when in deficit.
 - [x] Checked `officialGameData.js` and confirmed descriptions are updated verbatim from forensic vanilla sources.
+
+<a name="log-20260121-seo"></a>
+# Task: SEO & Metadata Implementation
+**User Prompt:** "add the favicons, the og image and stuff like that. make a good site title (PZ Character Builder) and a description, and that meta data that is important."
+
+## Implementation Plan
+1. **Asset Management**: Moved user-provided images from the root to the `public/` directory, renaming them for standard web conventions:
+    - `favicon-16x16.png`, `favicon-32x32.png`, `apple-touch-icon.png`, `og-image.png`.
+2. **Meta Tags Implementation**: Updated `index.html` with:
+    - Site title: "PZ Character Builder | Build 42 Pro Planner".
+    - Description: SEO-optimized blurb for search engines.
+    - Open Graph (Facebook/LinkedIn) and Twitter Card tags for rich social sharing.
+3. **PWA Essentials**: Created `manifest.json` to support high-quality icons on mobile home screens.
+
+## Walkthrough
+- [x] Verified site title updates in the browser.
+- [x] Verified favicons are correctly linked and accessible at `/favicon-32x32.png`.
+- [x] Verified OG image is set to `/og-image.png`.
+- [x] Confirmed social meta tags are present in `index.html`.
+
+<a name="log-20260121-trait-ui-refinement"></a>
+# Task: Trait UI Refinement & SEO Completion
+**User Prompt:** "the LOCKED traits (profession-related)( shouldnt have the 'trait's name responsible after their title, because it is their own title)"
+
+## Implementation Plan
+1. **Conflict Display Logic**: Updated `isConflicted` in `TraitCard.jsx` to be false if the trait is `isLocked`. This hides the conflict reason tag and ensures locked traits remain at full opacity.
+2. **Styling Polish**: Reinforced opacity and background rules in `TraitCard.jsx` to ensure selected traits are vibrantly colored and stay opaque even on hover.
+
+## Walkthrough
+- [x] Verified that locked traits (e.g. "Keen Cook" for Cook profession) no longer display conflict reason tags.
+- [x] Confirmed selected positive/negative traits have solid, vibrant backgrounds.
+- [x] Successfully pushed adjustments to GitHub.
+
+<a name="log-20260121-mobile-layout"></a>
+# Task: Mobile Layout Refactor
+**User Prompt:** "In mobile (under 1000px wide) make everything stack... Occupation column at the top. Positive traits after that... Character build column... title, if clicked, it will COLLAPSE the column... sticky stacking..."
+
+## Implementation Plan
+Refactor the layout to support a stacked, collapsible interface on mobile devices (under 1000px).
+
+### Proposed Changes
+
+#### [New Component] [SettingsBar](file:///Users/martinmana/Documents/Projects/pz-character-builder/src/components/SettingsBar.jsx)
+- Create a horizontal bar for settings that is always visible on mobile at the top.
+- Include buttons for "Builder/Database" and "Dynamic/Vanilla".
+
+#### [MODIFY] [App.jsx](file:///Users/martinmana/Documents/Projects/pz-character-builder/src/App.jsx)
+- Update the main container:
+    - Change `grid grid-cols-12` to `flex flex-col lg:grid lg:grid-cols-12`.
+    - Change `h-dvh overflow-hidden` to `min-h-screen lg:h-dvh lg:overflow-hidden`.
+- Add `collapsedSections` state: `const [collapsed, setCollapsed] = useState({ occupation: false, positive: false, negative: false, build: false });`.
+- Implement a `CollapsibleSection` wrapper or apply the logic directly to the columns.
+- Reorder columns for mobile:
+  1. `SettingsBar` (Mobile only)
+  2. Occupation
+  3. Positive Traits
+  4. Negative Traits
+  5. Character Build (Summary & Skills)
+- Apply sticky stacking to headers:
+    - Occupation Header: `sticky top-0 lg:static` (or `top-[SettingsBarHeight]` if SettingsBar is sticky).
+    - Positive Traits Header: `sticky top-[HeaderHeight]` on mobile.
+    - Negative Traits Header: `sticky top-[2 * HeaderHeight]` on mobile.
+    - Character Build Header: `sticky top-[3 * HeaderHeight]` on mobile.
+- Adjust `SummaryPanel` to hide redundant settings on mobile.
+
+#### [MODIFY] [index.css](file:///Users/martinmana/Documents/Projects/pz-character-builder/src/index.css)
+- Add utility for sticky offsets if Tailwind classes aren't enough:
+```css
+.sticky-top-0 { top: 0px; }
+.sticky-top-1 { top: 40px; }
+.sticky-top-2 { top: 80px; }
+.sticky-top-3 { top: 120px; }
+```
+(Assuming header height is 40px).
+
+## Walkthrough
+The application now features a fully responsive, mobile-first layout (for screens under 1000px) that stacks sections logically and supports collapsible columns with sticky stacking headers.
+
+### Changes Made
+
+#### Layout & Stacking
+- The main layout now transitions from a 12-column grid (desktop) to a single-column stack (mobile).
+- **Mobile Stacking Order**:
+  1. Settings Bar (New component)
+  2. Occupations
+  3. Positive Traits
+  4. Negative Traits
+  5. Character Build (Summary & Skills)
+
+#### Collapsible Sections
+- Each section header on mobile is now clickable to collapse/expand its content.
+- Visual cues (Chevron icons) indicate the current state of each section.
+- Content is hidden when collapsed to facilitate navigation through long lists.
+
+#### Sticky Stacking Headers
+- Headers stack on top of each other as the user scrolls, keeping all section titles visible at the top:
+  - **First Header**: Sticks to the bottom of the Settings Bar.
+  - **Subsequent Headers**: Stick below the previously stacked headers.
+- This creates a "forensic ledger" feel where the user always knows their context.
+
+#### Settings Bar
+- A dedicated, non-hidden row at the top for mobile.
+- Includes quick access to:
+  - View toggles (Builder/Database)
+  - Data mode toggles (Dynamic/Vanilla)
+  - Reset Build functionality
+
+## Verification Results
+- [x] Primary settings (Data Mode, View, Reset) are always visible on mobile.
+
+<a name="log-20260121-profession-trait-refinement"></a>
+# Task: Profession Trait UI Refinement
+**User Prompt:** "the PROFESSION TRAITS (desensitised, keen cook, nutritionist, etc) THEY ARE POSITIVE TRAITS."
+
+## Implementation Plan
+Refine the `TraitCard` component to ensure profession traits are visually indistinguishable from positive traits.
+
+### Changes Made
+- **TraitCard Component**:
+  - Updated `isPositive` logic to include `isLocked` (profession) traits.
+  - Ensured selected and unselected states for profession traits use the emerald (green) color scheme.
+  - Updated the tooltip to show `Profession` instead of a point cost of `0` or `+X`.
+- **SettingsBar Visibility**:
+  - Restored `SettingsBar` visibility by changing `hidden` back to `flex lg:hidden`.
+
+## Walkthrough
+Profession traits now correctly show as positive (green) traits even if they aren't natively categorized as such in the dataset.
+- [x] Verified "Desensitised" and other profession traits are green.
+- [x] Verified tooltip shows "Profession" label for locked traits.
+- [x] Verified SettingsBar is visible on mobile.
+
+<a name="log-20260121-trait-duplication-fix"></a>
+# Task: Trait Duplication & Sorting Fix
+**User Prompt:** "IF A PROFESSION-TRAIT already exists in the CHOOSABLE traits, we shouldnt DUPLICATE IT by ADDING IT TO THE TOP."
+
+## Implementation Plan
+Address technical duplication where traits with the same name but different IDs could be added multiple times to the build. Simplify sorting to respect the user's manual categorization.
+
+### Changes Made
+- **Duplication Prevention**: Updated `handleOccupationSelect` in `App.jsx` to check for existing traits by both **ID and Name** before adding profession-locked traits to the selection.
+- **Sorting Simplification**: Removed the custom sorting logic that forced "added" profession traits to the top. Since these traits are now natively categorized as "Positive" with 0 cost, they will naturally appear at the top of the list based on the standard cost-magnitude sorting.
+
+## Walkthrough
+Duplicates are no longer possible even when swapping between occupations that use different ID namespaces for the same traits. The sorting is now more natural and keeps items in their alphabetical/cost-based positions.
+- [x] Verified profession traits stay in their natural cost-magnitude sorted positions.
+
+<a name="log-20260121-trait-name-locking"></a>
+# Task: Trait Name-Based Locking
+**User Prompt:** "IF A PROFESSION-TRAIT already exists in the CHOOSABLE traits, we shouldnt DUPLICATE IT by ADDING IT TO THE TOP."
+
+## Implementation Plan
+Ensure that if an occupation grants a trait, the "selectable" version of that trait is hidden to prevent UI clutter and logical duplication.
+
+### Changes Made
+- **App.jsx Filtering**:
+  - Updated the `positiveTraits` filter in `App.jsx` to exclude any trait that shares a name with an occupation's `freeTraits` but has a different ID.
+  - This ensures that when "Fitness Instructor" is selected, the "-4" version of Nutritionist is hidden in favor of the "Profession" (0 cost) version.
+
+## Walkthrough
+Fixed duplication of traits shared by name.
+- [x] Verified selecting Fitness Instructor only shows ONE "Nutritionist" trait (the locked one).
+- [x] Confirmed this applies to all 9 traits recently updated to cost 0/Positive categorization.
+
+<a name="log-20260121-tooltip-unification"></a>
+# Task: Tooltip Unification & Positioning
+**User Prompt:** "Trait tooltips positioning work perfectl;y. PROFESSIONS and tooltips in the SUMMARY column (character build) dont yet. please fix"
+
+## Implementation Plan
+Create a reusable `RichTooltip` component to handle positioning and design consistently across all parts of the app.
+
+### Changes Made
+- **New Component**: `RichTooltip.jsx` - Reusable component with viewport-aware positioning (above/below switching and edge clamping).
+- **TraitCard.jsx**: Refactored to use `RichTooltip`.
+- **OccupationCard.jsx**: Refactored to use `RichTooltip`, fixing previous rigid positioning.
+- **SummaryPanel.jsx**: Integrated `RichTooltip` for both the selected occupation and each trait in the "Chosen Traits" list.
+
+## Walkthrough
+Verified unified behavior across the entire build screen.
+- [x] Occupations now show tooltips with same design as traits.
+- [x] Traits in the Summary Build (Character Build) side column now show descriptions on hover.
+- [x] Tooltips correctly flip orientation when nearing the top or bottom of the screen.
+
+<a name="log-20260121-skills-tooltip-refactor"></a>
+# Task: Skills Tooltip Positioning Refactor
+**User Prompt:** "make all the SKILLS tooltips bottom:0 and right: 100%... and make the triggers position:relative"
+
+## Implementation Plan
+Refactor `SkillsPanel.jsx` to use relative-absolute positioning for tooltips instead of portals, specifically popping out to the left and aligned to the bottom.
+
+### Changes Made
+- **SkillsPanel.jsx**:
+    - Removed `TooltipPortal` and coordinate-based positioning state.
+    - Updated `SkillRow` and `PassiveSkillTag` to use `position: relative`.
+    - Implemented `SkillTooltip` as an absolute child with `right: [calc(100%+10px)]` and `bottom: 0`.
+    - Added touch/hover triggers to support both desktop and mobile.
+
+## Walkthrough
+Verified "pop-out to left" behavior.
+- [x] Skill tooltips now appear to the left of the "Starting Major Skills" rows.
+- [x] Learnable Skills tags also show tooltips to their left.
+- [x] Consistent design with `RichTooltip`.
+
+<a name="log-20260121-skills-richtooltip"></a>
+# Task: Skills RichTooltip Integration
+**User Prompt:** "make the skills use the richtooltip as well"
+
+## Implementation Plan
+Refactor `RichTooltip.jsx` to be flexible enough for skills, then swap out the local implementation in `SkillsPanel.jsx`.
+
+### Changes Made
+- **RichTooltip.jsx**:
+    - Added `isSkill` prop to handle skill-specific layout (showing categories, hiding costs).
+    - Added `side` prop (`auto`, `left`, `right`) to support sidebar pop-outs.
+    - Updated positioning logic to handle viewport-aware flipping and maximum height calculations for side-aligned tooltips.
+- **SkillsPanel.jsx**:
+    - Completely removed local `SkillTooltip` and `TooltipPortal`.
+    - Integrated `RichTooltip` into `SkillRow` and `PassiveSkillTag` with `side="left"` and `isSkill={true}`.
+
+## Walkthrough
+Unified experience confirmed.
+- [x] Skills now use the same high-performance portal system as Traits and Occupations.
+- [x] Side-pop behavior preserved but upgraded with viewport awareness and consistent styling.
+
+<a name="log-20260121-build-ui-refinement"></a>
+# Task: Build UI Refinement & Positioning Fix
+**User Prompt:** "Fix tooltip positioning: Upon triggering a tooltip... los traits disabled, cross the original title. strikethru... REINSTATE AI"
+
+## Implementation Plan
+- Robustly refactor `RichTooltip.jsx` to measure content and ensure visibility.
+- Stylize disabled traits with strikethrough.
+- Add API Key persistence for Groq and unlock the Chat widget.
+- Add educational help section to the Summary Panel.
+
+### Changes Made
+- **RichTooltip.jsx**: Implemented measurement-based positioning using `useEffect`. Added horizontal clamping and automatic flipping/fallback for side-aligned tooltips.
+- **TraitCard.jsx**: Added `line-through` CSS to names when `isConflicted` is true.
+- **groq.js & SettingsMenu.jsx**: Connected Groq service to `localStorage` and added a secure input field in the settings popover.
+- **Layout.jsx**: Reinstated the `ChatWidget`.
+- **SummaryPanel.jsx**: Added an expandable "Build Information & Help" section.
+
+## Walkthrough
+Verified all updates.
+- [x] Tooltips now perfectly stay on screen regardless of window size or trigger position.
+- [x] Conflicted traits are visually distinct with strikethrough.
+- [x] AI Chat is functional once a key is provided in settings.
+- [x] New help section provides clear guidance on build mechanics.
+
+<a name="log-20260121-parent-relative-tooltips"></a>
+# Task: Parent-Relative Tooltip Positioning
+**User Prompt:** "they should be positioned absolute to their parent (relative), taking into consideration the calculations we just did"
+
+## Implementation Plan
+Refactor `RichTooltip` to remove the Portal system and instead use `position: relative` for the trigger and `position: absolute` for the tooltip. Offset calculations must translate viewport-clamped coordinates into parent-local coordinates.
+
+### Changes Made
+- **RichTooltip.jsx**:
+    - Removed `TooltipPortal` and `createPortal`.
+    - Wrapped trigger in a `relative` div.
+    - Updated `useEffect` to calculate viewport-aligned x/y and then subtract the trigger's own `top/left` to find the local offset.
+    - Added `isCalculated` state to prevent the "top-left flicker" by keeping the tooltip at `opacity-0` during the single-frame measurement phase.
+    - Simplified the layout to render the tooltip as a direct child of the trigger wrapper.
+
+## Walkthrough
+Verified "relative-absolute" behavior.
+- [x] Tooltips now reside within the DOM tree of their component (e.g. `TraitCard` or `SkillRow`).
+- [x] Positioning remains viewport-aware (flips and clamps to edges) but is now achieved via local absolute offsets.
+- [x] No more top-left corner flickering.

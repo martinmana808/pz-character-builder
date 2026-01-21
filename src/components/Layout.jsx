@@ -13,7 +13,7 @@ const Layout = ({ children, currentView, onViewChange, currentDataMode, onDataMo
       <main className="flex-1 overflow-hidden relative max-w-[1600px] mx-auto w-full">
         {children}
       </main>
-      {/* <ChatWidget /> */}
+      <ChatWidget />
     </div>
   );
 };

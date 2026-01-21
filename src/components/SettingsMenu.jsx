@@ -82,6 +82,22 @@ const SettingsMenu = ({ currentView, onViewChange, currentDataMode, onDataModeCh
                 </div>
             </div>
             
+            <div className="p-3 border-t border-slate-800">
+                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Groq AI Service</h4>
+                <div className="space-y-2">
+                    <input 
+                        type="password"
+                        placeholder="Enter API Key"
+                        defaultValue={localStorage.getItem('groq_api_key') || ''}
+                        onChange={(e) => localStorage.setItem('groq_api_key', e.target.value)}
+                        className="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1.5 text-[10px] text-white focus:outline-none focus:border-cyan-500/50"
+                    />
+                    <div className="text-[8px] text-slate-500 leading-tight">
+                        Key is stored locally in your browser.
+                    </div>
+                </div>
+            </div>
+            
             <div className="bg-slate-950 px-3 py-2 text-[10px] text-slate-600 text-center border-t border-slate-800">
                 PZ BUILDER
             </div>

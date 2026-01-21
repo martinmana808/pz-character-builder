@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+:root {
+  --mobile-settings-h: 82px;
+  --mobile-title-h: 40px;
+}
+
 /* Custom Scrollbar for that "Techy" feel */
 ::-webkit-scrollbar {
   width: 8px;

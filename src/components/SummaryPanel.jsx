@@ -1,10 +1,12 @@
 import React from 'react';
-import { Copy, Check, Trash2, Share2 } from 'lucide-react';
+import { Copy, Check, Trash2, Share2, HelpCircle } from 'lucide-react';
 import SettingsMenu from './SettingsMenu';
+import RichTooltip from './RichTooltip';
 
 const SummaryPanel = ({ points, selectedOccupation, selectedTraits, onReset, onRemoveTrait, skills, currentView, onViewChange, currentDataMode, onDataModeChange, isTraitLocked }) => {
   const [copied, setCopied] = React.useState(false);
   const [shared, setShared] = React.useState(false);
+  const [showHelp, setShowHelp] = React.useState(false);
 
   const handleShare = () => {
     const shareUrl = `https://pz-character-builder.netlify.app/${window.location.search}`;
@@ -14,22 +16,8 @@ const SummaryPanel = ({ points, selectedOccupation, selectedTraits, onReset, onR
   };
 
   const handleCopy = () => {
-    // ... existing handleCopy logic ...
     const positives = selectedTraits.filter(t => t.category === 'Positive').map(t => t.name).join(', ');
     const negatives = selectedTraits.filter(t => t.category === 'Negative').map(t => t.name).join(', ');
-    
-    // Format Skills
-    const skillList = Object.entries(skills || {})
-        .filter(([_, val]) => val > 0 && _ !== 'strength' && _ !== 'fitness') 
-        .sort(([kA, vA], [kB, vB]) => vB - vA || kA.localeCompare(kB))
-        .map(([key, val]) => {
-            const label = key.charAt(0).toUpperCase() + key.slice(1);
-            return `${label}: ${val}`;
-        })
-        .join('\n');
-
-    // Base skills (Strength/Fitness) are usually always relevant
-    // ...
     
     const allSkills = Object.entries(skills || {})
         .filter(([key, val]) => val > 0 || key === 'strength' || key === 'fitness')
@@ -66,7 +54,7 @@ Build your PZ character https://pz-character-builder.netlify.app/
 
   return (
     <div className=" flex flex-col shrink-0 space-y-4">
-      <div className="flex justify-between items-center mb-2 top-0 bg-slate-950 z-10">
+      <div className="hidden lg:flex justify-between items-center mb-2 top-0 bg-slate-950 z-10">
         <h3 className="text-xs uppercase text-slate-500 font-bold">Character Build</h3>
         <SettingsMenu 
             currentView={currentView} 
@@ -89,23 +77,23 @@ Build your PZ character https://pz-character-builder.netlify.app/
       </div>
 
       <div className="flex-1 space-y-4">
-        {/* ... existing render content ... */}
         <div>
            <h4 className="text-[10px] uppercase text-slate-500 font-bold mb-1">Occupation</h4>
            {selectedOccupation ? (
-             <>
-             <div className="flex justify-between items-center text-slate-200 bg-slate-800/50 p-2 rounded border border-slate-800/60">
-               <span className="font-semibold text-sm">{selectedOccupation.name}</span>
-               <span className={`text-sm font-bold opacity-30 ${selectedOccupation.cost < 0 ? '' : ''}`}>
-                 {selectedOccupation.cost === 0 ? '0' : (selectedOccupation.cost < 0 ? `${selectedOccupation.cost}` : `+${Math.abs(selectedOccupation.cost)}`)}
-               </span>
-              </div>
-              {selectedOccupation.description && selectedOccupation.description.length > 1 && (
-                <p className="mt-2 text-[10px] italic text-slate-500 opacity-80">
-                    {selectedOccupation.description.replace(/^"|"$/g, '')}
-                </p>
-             )}
-             </>
+             <RichTooltip 
+               content={selectedOccupation} 
+               isPositive={true} 
+               cost={selectedOccupation.cost} 
+               isLocked={false} 
+               isOccupation={true}
+             >
+               <div className="flex justify-between items-center text-slate-200 bg-slate-800/50 p-2 rounded border border-slate-800/60 transition-colors hover:border-slate-600 hover:bg-slate-800/80">
+                 <span className="font-semibold text-sm">{selectedOccupation.name}</span>
+                 <span className={`text-sm font-bold opacity-30`}>
+                   {selectedOccupation.cost === 0 ? '0' : (selectedOccupation.cost < 0 ? `${selectedOccupation.cost}` : `+${Math.abs(selectedOccupation.cost)}`)}
+                 </span>
+                </div>
+             </RichTooltip>
            ) : (
              <span className="text-xs text-slate-600 italic pl-1">None selected</span>
            )}
@@ -131,27 +119,36 @@ Build your PZ character https://pz-character-builder.netlify.app/
                 })
                 .map(trait => {
                     const isLocked = isTraitLocked(trait);
+                    const isPositive = trait.category === 'Positive' || isLocked;
                     return (
-                        <li key={trait.id} 
-                            onClick={() => !isLocked && onRemoveTrait(trait)} 
-                            className={`flex justify-between items-center text-xs group bg-slate-950/30 p-1.5 rounded border transition-colors 
-                                ${isLocked 
-                                    ? 'border-emerald-900/10 opacity-70 cursor-not-allowed' 
-                                    : 'border-emerald-900/30 hover:border-emerald-500/30 cursor-pointer hover:bg-slate-900/80'}`
-                            }>
-                        <span className="text-emerald-300 truncate mr-2">
-                            {trait.name}
-                        </span>
-                        <span className="font-mono font-bold text-emerald-400">
-                            {isLocked ? (
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
-                                <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clipRule="evenodd" />
-                            </svg>
-                            ) : (
-                            `-${Math.abs(trait.cost)}`
-                            )}
-                        </span>
-                        </li>
+                        <RichTooltip 
+                          key={trait.id}
+                          content={trait} 
+                          isPositive={isPositive} 
+                          cost={trait.cost} 
+                          isLocked={isLocked}
+                        >
+                          <li 
+                              onClick={() => !isLocked && onRemoveTrait(trait)} 
+                              className={`flex justify-between items-center text-xs group bg-slate-950/30 p-1.5 rounded border transition-colors 
+                                  ${isLocked 
+                                      ? 'border-emerald-900/10 opacity-70 cursor-not-allowed' 
+                                      : 'border-emerald-900/30 hover:border-emerald-500/30 cursor-pointer hover:bg-slate-900/80 shadow-sm'}`
+                              }>
+                          <span className="text-emerald-300 truncate mr-2">
+                              {trait.name}
+                          </span>
+                          <span className="font-mono font-bold text-emerald-400">
+                              {isLocked ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
+                                  <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clipRule="evenodd" />
+                              </svg>
+                              ) : (
+                              `-${Math.abs(trait.cost)}`
+                              )}
+                          </span>
+                          </li>
+                        </RichTooltip>
                     );
              })}
 
@@ -160,26 +157,73 @@ Build your PZ character https://pz-character-builder.netlify.app/
                 .filter(t => t.category === 'Negative' && !isTraitLocked(t))
                 .sort((a,b) => Math.abs(a.cost) - Math.abs(b.cost))
                 .map(trait => {
-                    const isLocked = isTraitLocked(trait); // Re-evaluate for negative traits if needed, though filter should handle it
+                    const isLocked = isTraitLocked(trait); 
                     return (
-                        <li key={trait.id} 
-                            onClick={() => !isLocked && onRemoveTrait(trait)} 
-                            className={`flex justify-between items-center text-xs group bg-slate-950/30 p-1.5 rounded border transition-colors 
-                                ${isLocked 
-                                    ? 'border-red-900/10 opacity-70 cursor-not-allowed' 
-                                    : 'border-red-900/30 hover:border-red-500/30 cursor-pointer hover:bg-slate-900/80'}`
-                            }>
-                      <span className="text-rose-300 truncate mr-2">
-                        {trait.name}
-                      </span>
-                       <span className="font-mono font-bold text-red-400">
-                        {`+${Math.abs(trait.cost)}`}
-                       </span>
-                    </li>
+                        <RichTooltip 
+                          key={trait.id}
+                          content={trait} 
+                          isPositive={false} 
+                          cost={trait.cost} 
+                          isLocked={isLocked}
+                        >
+                          <li 
+                              onClick={() => !isLocked && onRemoveTrait(trait)} 
+                              className={`flex justify-between items-center text-xs group bg-slate-950/30 p-1.5 rounded border transition-colors 
+                                  ${isLocked 
+                                      ? 'border-red-900/10 opacity-70 cursor-not-allowed' 
+                                      : 'border-red-900/30 hover:border-red-500/30 cursor-pointer hover:bg-slate-900/80 shadow-sm'}`
+                              }>
+                            <span className="text-rose-300 truncate mr-2">
+                              {trait.name}
+                            </span>
+                             <span className="font-mono font-bold text-red-400">
+                              {`+${Math.abs(trait.cost)}`}
+                             </span>
+                          </li>
+                        </RichTooltip>
                   );
              })}
            </ul>
         </div>
+      </div>
+
+      <div className="mt-4 border-t border-slate-800 pt-3">
+        <button 
+          onClick={() => setShowHelp(!showHelp)}
+          className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase hover:text-slate-300 transition-colors"
+        >
+          <HelpCircle size={12} />
+          Build Information & Help
+        </button>
+        
+        {showHelp && (
+          <div className="mt-2 space-y-3 bg-slate-950/50 p-3 rounded border border-slate-800 animate-in fade-in slide-in-from-top-1 duration-200">
+            <div>
+              <h5 className="text-emerald-500 text-[10px] font-bold uppercase mb-1">Point System</h5>
+              <p className="text-slate-400 text-[10px] leading-relaxed">
+                Positive traits cost points (shown as -X), while negative traits grant points (+X). You must reach 0 or higher starting points to finish a character.
+              </p>
+            </div>
+            <div>
+              <h5 className="text-amber-500 text-[10px] font-bold uppercase mb-1">Exclusions & Conflicts</h5>
+              <p className="text-slate-400 text-[10px] leading-relaxed">
+                Traits with <span className="line-through opacity-70">strikethrough names</span> are disabled because they conflict with a trait you already picked (e.g., picking "Hearty Appetite" excludes "Light Eater").
+              </p>
+            </div>
+            <div>
+              <h5 className="text-cyan-500 text-[10px] font-bold uppercase mb-1">Profession Traits</h5>
+              <p className="text-slate-400 text-[10px] leading-relaxed">
+                Some occupations grant inherent traits for free. These are automatically added to your build and cannot be removed.
+              </p>
+            </div>
+            <div>
+              <h5 className="text-slate-300 text-[10px] font-bold uppercase mb-1">Sharing</h5>
+              <p className="text-slate-400 text-[10px] leading-relaxed">
+                Use the <span className="text-slate-200 font-bold">Copy</span> button to get a text summary for Discord, or <span className="text-slate-200 font-bold">Share</span> to copy a unique URL link to this exact build.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-4 pt-4 border-t border-slate-800 flex gap-2">

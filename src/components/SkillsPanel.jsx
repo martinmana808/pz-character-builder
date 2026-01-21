@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
 import { VANILLA_SKILLS } from '../data/vanillaData';
 
@@ -50,27 +50,7 @@ const SKILL_LABELS = {
   doctor: 'Doctor'
 };
 
-const TooltipPortal = ({ children, position, direction }) => {
-  if (typeof document === 'undefined') return null;
-  return createPortal(
-    <div 
-      className={`fixed z-[200] pointer-events-none animate-in fade-in duration-150 ${direction === 'up' ? 'slide-in-from-bottom-2' : 'slide-in-from-top-2'}`}
-      style={{ left: position.x, top: position.y, transform: direction === 'up' ? 'translateY(-100%)' : 'none' }}
-    >
-        {children}
-    </div>,
-    document.body
-  );
-};
-
-const SkillTooltip = ({ skillData, position, direction }) => (
-    <TooltipPortal position={position} direction={direction}>
-        <div className="bg-slate-900 border border-slate-500 rounded-lg p-3 shadow-2xl w-[260px] relative">
-            <h4 className="text-emerald-400 font-bold mb-1">{skillData.name} <span className="text-slate-500 text-xs font-normal">({skillData.category})</span></h4>
-            <p className="text-slate-300 text-xs leading-relaxed whitespace-pre-wrap">{skillData.description}</p>
-        </div>
-    </TooltipPortal>
-);
+import RichTooltip from './RichTooltip';
 
 const SkillBar = ({ level }) => {
   const blocks = [];
@@ -84,87 +64,57 @@ const SkillBar = ({ level }) => {
 };
 
 const SkillRow = ({ skillKey, value }) => {
-    const [showTooltip, setShowTooltip] = useState(false);
-    const [pos, setPos] = useState({x:0, y:0});
-    const timerRef = useRef(null);
-
     // Try to find skill data
     const skillData = VANILLA_SKILLS?.find(s => s.id === skillKey) || { name: SKILL_LABELS[skillKey] || skillKey, category: 'General', description: 'No description available.' };
 
-    const handleMouseEnter = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        setPos({ x: rect.left - 270, y: rect.top }); // Show to LEFT of panel
-        timerRef.current = setTimeout(() => setShowTooltip(true), 400);
-    };
-
-    const handleMouseLeave = () => {
-        clearTimeout(timerRef.current);
-        setShowTooltip(false);
-    };
-
     return (
-        <>
-        <div 
-            className="flex items-center justify-between group hover:bg-slate-800/50 rounded px-1 -mx-1 transition-colors cursor-help"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+        <RichTooltip 
+          content={skillData} 
+          isPositive={true} 
+          isSkill={true} 
+          side="left"
         >
-            <span className="text-slate-300 font-medium">
-                {SKILL_LABELS[skillKey] || skillKey}
-                {(skillKey === 'strength' || skillKey === 'fitness' ? value - 5 !== 0 : value > 0) && (
-                       <span className={`text-[9px] font-bold ml-1.5 ${
-                           (skillKey === 'strength' || skillKey === 'fitness' ? value - 5 : value) > 0 
-                           ? 'text-emerald-400' 
-                           : 'text-red-400'
-                       }`}>
-                           {(() => {
-                               const bonus = skillKey === 'strength' || skillKey === 'fitness' ? value - 5 : value;
-                               return bonus > 0 ? `(+${bonus})` : `(${bonus})`;
-                           })()}
-                       </span>
-                   )}
-            </span>
-            <div className="flex items-center gap-3">
-               <SkillBar level={value} />
-               <div className="flex items-center justify-end w-4">
-                   <span className="text-white font-bold">{value}</span>
-               </div>
+            <div className="flex items-center justify-between group hover:bg-slate-800/50 rounded px-1 -mx-1 transition-colors cursor-help relative">
+                <span className="text-slate-300 font-medium whitespace-nowrap">
+                    {SKILL_LABELS[skillKey] || skillKey}
+                    {(skillKey === 'strength' || skillKey === 'fitness' ? value - 5 !== 0 : value > 0) && (
+                           <span className={`text-[9px] font-bold ml-1.5 ${
+                               (skillKey === 'strength' || skillKey === 'fitness' ? value - 5 : value) > 0 
+                               ? 'text-emerald-400' 
+                               : 'text-red-400'
+                           }`}>
+                               {(() => {
+                                   const bonus = skillKey === 'strength' || skillKey === 'fitness' ? value - 5 : value;
+                                   return bonus > 0 ? `(+${bonus})` : `(${bonus})`;
+                               })()}
+                           </span>
+                       )}
+                </span>
+                <div className="flex items-center gap-3">
+                   <SkillBar level={value} />
+                   <div className="flex items-center justify-end w-4">
+                       <span className="text-white font-bold">{value}</span>
+                   </div>
+                </div>
             </div>
-        </div>
-        {showTooltip && <SkillTooltip skillData={skillData} position={pos} direction="down" />}
-        </>
+        </RichTooltip>
     );
 };
 
 const PassiveSkillTag = ({ skillKey }) => {
-    const [showTooltip, setShowTooltip] = useState(false);
-    const [pos, setPos] = useState({x:0, y:0});
-    const timerRef = useRef(null);
-    
     const skillData = VANILLA_SKILLS?.find(s => s.id === skillKey) || { name: SKILL_LABELS[skillKey] || skillKey, category: 'General', description: 'No description available.' };
 
-    const handleMouseEnter = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        setPos({ x: rect.left, y: rect.bottom + 5 }); // Show below logic
-        timerRef.current = setTimeout(() => setShowTooltip(true), 400);
-    };
-
-    const handleMouseLeave = () => {
-        clearTimeout(timerRef.current);
-        setShowTooltip(false);
-    };
-
     return (
-        <>
-        <span 
-            className="px-2 py-0.5 bg-slate-800 text-slate-400 text-[10px] rounded cursor-help hover:bg-slate-700 hover:text-slate-200 transition-colors"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+        <RichTooltip 
+          content={skillData} 
+          isPositive={true} 
+          isSkill={true} 
+          side="left"
         >
-            {skillData.name}
-        </span>
-        {showTooltip && <SkillTooltip skillData={skillData} position={pos} direction="down" />}
-        </>
+            <span className="px-2 py-0.5 bg-slate-800 text-slate-400 text-[10px] rounded cursor-help hover:bg-slate-700 hover:text-slate-200 transition-colors relative">
+                {skillData.name}
+            </span>
+        </RichTooltip>
     )
 }
 

@@ -1,12 +1,16 @@
 
-const API_KEY = import.meta.env.VITE_GROQ_API_KEY || ''; // Use environment variable
-
 export const chatWithGroq = async (messages, onChunk) => {
+  const apiKey = localStorage.getItem('groq_api_key') || import.meta.env.VITE_GROQ_API_KEY || '';
+  
+  if (!apiKey) {
+    throw new Error('Groq API Key missing. Please add it in Settings.');
+  }
+
   try {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
