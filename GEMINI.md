@@ -10,6 +10,27 @@ A single-page React application for building Project Zomboid characters for a sp
 - State Management: React Context / Local State
 
 ## History
+### [2026-01-21] Profession Description Reinstated | [Technical Details](./GEMINI--logs.md#log-20260121-profession-desc-restore)
+- Reinstated the occupation description field in the Character Build column.
+- Refined styling of the description for better readability in the summary view.
+
+### [2026-01-21] UI Refinements & AI Integration | [Technical Details](./GEMINI--logs.md#log-20260121-ui-refinements)
+- Implemented a viewport warning bar for screens < 1280px.
+- Refactored mobile AI chat trigger to 100% width and added custom `chat_trigger.png` icon.
+- Added AI assistance section to the global help modal.
+
+### [2026-01-21] How to Use Guide Integration | [Technical Details](./GEMINI--logs.md#log-20260121-how-to-use-guide)
+- Implemented a comprehensive "How to Use" guide modal with detailed mechanics explanations.
+- Added help buttons across all main UI views (Builder, Database, Mobile).
+
+### [2026-01-21] Share & Copy Logic Consolidation | [Technical Details](./GEMINI--logs.md#log-20260121-sharing-merge)
+- Merged "Share" and "Copy" buttons into a single "Copy Build" feature.
+- Implemented a professional character report template with skill mapping and shareable URLs.
+
+### [2026-01-21] Trait Duplication & Sorting Fix | [Technical Details](./GEMINI--logs.md#log-20260121-trait-duplication-fix)
+- Fixed bug where traits with same names but different IDs could be duplicated in selection.
+- Simplified positive trait sorting to follow standard cost-magnitude rules.
+
 ### [2026-01-21] Parent-Relative Tooltip Migration | [Technical Details](./GEMINI--logs.md#log-20260121-parent-relative-tooltips)
 - Migrated from Portals to Parent-Relative Absolute positioning (leveraging `position: fixed` for clipping bypass).
 - Implemented viewport-to-local coordinate translation for 100% visibility.

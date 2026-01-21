@@ -7,7 +7,7 @@ import { SYSTEM_PROMPT } from '../data/aiContext';
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'Hello! I am your Project Zomboid Expert. Ask me about traits, occupations, or optimized builds for Build 42.' }
+    { role: 'assistant', content: 'Hello! I am your Project Zomboid Builder. Ask me about traits, occupations, or optimized builds for Build 42. Remember that you need to set up your Groq API KEY in the settings modal.' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -62,26 +62,37 @@ const ChatWidget = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-sans">
-      {/* Trigger Button */}
+    <div className="z-[100] font-sans">
+      {/* Trigger Button - Desktop Bubble */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-emerald-500 hover:bg-emerald-400 text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110 flex items-center justify-center"
+          className="hidden sm:flex fixed bottom-6 right-6 bg-slate-900 hover:bg-slate-800 text-white p-0 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-transform hover:scale-110 items-center justify-center border-2 border-emerald-500/50 w-14 h-14 overflow-hidden"
         >
-          <MessageCircle size={24} />
+          <img src="/chat_trigger.png" alt="AI Chat" className="w-full h-full object-cover" />
+        </button>
+      )}
+
+      {/* Trigger Button - Mobile Full Width Bar */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="flex sm:hidden fixed bottom-0 left-0 right-0 bg-emerald-600 hover:bg-emerald-500 text-white py-3 px-4 shadow-[0_-4px_10px_rgba(0,0,0,0.3)] items-center justify-center gap-3 font-bold text-sm tracking-wider underline-offset-4 ring-1 ring-emerald-400/30"
+        >
+          <img src="/chat_trigger.png" alt="" className="w-6 h-6 rounded-full border border-white/20" />
+          TALK TO AI ASSISTANT
         </button>
       )}
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="bg-slate-900 border border-slate-700 rounded-lg shadow-2xl w-[350px] sm:w-[400px] h-[500px] flex flex-col animate-in slide-in-from-bottom-5 duration-200">
+        <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 bg-slate-900 border-l sm:border border-slate-700 sm:rounded-lg shadow-2xl w-full sm:w-[400px] h-full sm:h-[500px] flex flex-col animate-in slide-in-from-bottom-5 duration-200">
           
           {/* Header */}
           <div className="flex justify-between items-center p-3 border-b border-slate-800 bg-slate-950 rounded-t-lg">
-            <h3 className="font-bold text-emerald-400 flex items-center gap-2">
-               <Bot size={18} /> PZ Expert Bot
-            </h3>
+            <h4 className="font-bold text-emerald-400 flex items-center gap-2">
+               <Bot size={18} /> PZ Character builder
+            </h4>
             <button 
               onClick={() => setIsOpen(false)}
               className="text-slate-400 hover:text-white transition-colors"

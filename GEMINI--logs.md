@@ -603,3 +603,108 @@ Verified "relative-absolute" behavior.
 - [x] Positioning remains viewport-aware (flips and clamps to edges).
 - [x] No more clipping by `overflow: hidden` parent containers due to `position: fixed` migration.
 - [x] No more top-left corner flickering.
+
+<a name="log-20260121-trait-duplication-fix"></a>
+# Task: Trait Duplication Bug Fix
+**User Prompt:** "every single negative trait that I add it appears duplicated in the positive traits column"
+
+## Implementation Plan
+Refactor the `positiveTraits` `useMemo` filter logic in `App.jsx` to ensure that negative traits are strictly excluded unless they are provided as "free" (locked) traits by the selected occupation.
+
+### Changes Made
+- **App.jsx**: Updated the `positiveTraits` filter to use `isTraitLocked(t)` instead of checking if the trait is selected. This ensures that manually chosen negative traits remain exclusively in the negative column, while profession-granted traits (which are styled emerald) stay in the positive/profession list.
+
+## Walkthrough
+Verified fix via code analysis of the filter logic.
+- [x] Negative traits no longer appear in the positive column when selected.
+- [x] Profession-locked traits correctly remain in the intended column.
+
+<a name="log-20260121-sharing-merge"></a>
+# Task: Share & Copy Logic Consolidation
+**User Prompt:** "the share button should be merged with the COPY as well. Only one button. And the result should be something like this: ..."
+
+## Implementation Plan
+Consolidate the `handleShare` and `handleCopy` functions into a single "Copy Build" feature. Implement a professional text template that includes occupation, traits, major skills, point totals, and the unique build URL.
+
+### Changes Made
+- **SkillsPanel.jsx**: Exported `SKILL_LABELS` for use in summary generation.
+- **SummaryPanel.jsx**:
+    - Removed `Share2` icon and `handleShare` function.
+    - Updated `handleCopy` to generate the new requested template (including the `———` separator and dual links).
+    - Unified the UI into a single primary "Copy Build" button.
+    - Updated Help section descriptions.
+
+## Walkthrough
+Verified the new copy template.
+- [x] "Copy Build" button generates a complete report.
+- [x] Skill names are correctly mapped (e.g., "axes" → "Axe").
+- [x] URL is correctly included in the output.
+- [x] Fixed `Uncaught ReferenceError: React is not defined` caused by missing import in `SummaryPanel.jsx`.
+
+<a name="log-20260121-how-to-use-guide"></a>
+# Task: "How to Use" Guide Modal
+**User Prompt:** "next to the Settings & Navigation button, to the left, add a button that is a (?) symbol, and that opens a modal explaining how this builder is used..."
+
+## Implementation Plan
+Create a comprehensive help guide modal and integrate it into all main UI headers. The modal provides clarity on character mechanics, point calculation, and sharing.
+
+### Changes Made
+- **HowToUseModal.jsx [NEW]**:
+    - Implemented a premium modal using `createPortal`.
+    - Content features: Point System, Exclusions, Skill bonuses, Dynamic mode explanation, and Sharing instructions.
+    - Responsive design for mobile/desktop.
+- **SummaryPanel.jsx**: Added help button next to settings in the desktop header.
+- **DatabaseView.jsx**: Added help button next to settings in the database header.
+- **SettingsBar.jsx**: Added help button to the mobile sticky settings bar.
+
+## Walkthrough
+Verified accessibility across all views.
+- [x] Help button opens modal in Builder view (Desktop).
+- [x] Help button opens modal in Database view.
+- [x] Help button opens modal on Mobile header.
+- [x] Modal content accurately reflects recent build logic and sharing updates.
+- [x] Fixed `Uncaught ReferenceError: React is not defined` regression in `SummaryPanel.jsx`.
+- [x] Fixed `Uncaught ReferenceError: HelpCircle is not defined` by correcting aliased import usage.
+- [x] Reinstated profession description in the character build column of the `SummaryPanel`.
+
+<a name="log-20260121-profession-desc-restore"></a>
+# Task: Restore Profession Description in SummaryPanel
+**User Prompt:** "Below this flex justify-between items-center text-slate-200 bg-slate-800/50 p-2 rounded border border-slate-800/60 transition-colors hover:border-slate-600 hover:bg-slate-800/80 in the character build column, lets reinstate what we used to have before: the profession description."
+
+## Implementation Plan
+Restore the `description` field for occupations in the `SummaryPanel` component, ensuring it is displayed clearly below the occupation name card.
+
+### Changes Made
+- **SummaryPanel.jsx**:
+    - Wrapped the occupation name and its description in a React fragment.
+    - Added the `selectedOccupation.description` display logic with styling consistent with the previous design (muted slate text with a subtle left border).
+
+## Walkthrough
+Verified visibility of occupation descriptions.
+- [x] Descriptions correctly appear when an occupation is selected.
+- [x] Mapped description sanitization (removing quotes if present).
+
+<a name="log-20260121-ui-refinements"></a>
+# Task: UI Refinements & AI Integration Enhancements
+**User Prompt:** "Can you add to the HELPER MODAL that you can CHAT WITH ai... add an information warning div... in mobile HAve the ai bubble trigger be a 100% vw button... HAve the ai chat trigger bubble icon have this image 'chat_trigger.png'"
+
+## Implementation Plan
+Refine the UI to improve usability and feature discoverability. Add a viewport warning for small screens, enhance the mobile AI chat entry point, and update the help guide with AI information.
+
+### Changes Made
+- **Asset Movement**: Moved `chat_trigger.png` to `public/` for easy access.
+- **HowToUseModal.jsx**: Added a new section explaining the AI Build Assistant.
+- **Layout.jsx**: 
+    - Implemented a dynamic `showWarning` state based on window width.
+    - Added an amber warning bar for viewports smaller than 1280px.
+- **ChatWidget.jsx**:
+    - **Desktop**: Swapped the `MessageCircle` icon for a premium bubble using `chat_trigger.png`.
+    - **Mobile**: Implemented a fixed, 100% width bottom bar trigger with the new icon and clear call-to-action ("TALK TO AI ASSISTANT").
+    - **Responsive Layout**: The chat window now expands to full-screen on mobile and remains a focused side-panel on desktop.
+
+## Walkthrough
+Verified all UI states.
+- [x] Viewport warning appears when resizing window below 1280px.
+- [x] Desktop AI bubble uses the custom PNG icon.
+- [x] Mobile view shows the full-width AI bar at the bottom.
+- [x] Helper modal includes the AI information section.

@@ -221,15 +221,13 @@ function App() {
   const positiveTraits = useMemo(() => {
     // 1. Get base traits
     let list = TRAITS.filter(t => {
-      // If it's a negative trait and NOT locked (unselected), it doesn't belong here
-      if (t.category === 'Negative' && !selectedTraits.some(st => st.id === t.id)) return false;
+      // 1. Always exclude Negative traits UNLESS they are locked by the profession
+      if (t.category === 'Negative' && !isTraitLocked(t)) return false;
       
-      // If cost is 0 and it's not selected, it's just clutter (unless it's an occupation trait we'll add in step 2)
-      if (t.cost === 0 && !selectedTraits.some(st => st.id === t.id)) return false;
+      // 2. Exclude cost-0 traits unless locked OR manually selected 
+      if (t.cost === 0 && !isTraitLocked(t) && !selectedTraits.some(st => st.id === t.id)) return false;
 
-      // CRITICAL: If this trait has the same name as one of the occupation's free traits,
-      // but it's NOT the specific ID used by the occupation, filter it out.
-      // E.g. skip Nutritionist (-4) if Fitness Instructor gives Nutritionist (0).
+      // 3. Name-based locking (don't show duplicate traits if profession grants them)
       if (freeTraitNames.has(t.name) && !selectedOccupation?.freeTraits?.includes(t.id)) {
         return false;
       }

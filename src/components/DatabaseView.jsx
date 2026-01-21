@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { VANILLA_OCCUPATIONS, VANILLA_TRAITS, VANILLA_SKILLS } from '../data/vanillaData';
 import SettingsMenu from './SettingsMenu';
+import { HelpCircle as HelpIcon } from 'lucide-react';
+import HowToUseModal from './HowToUseModal';
 
 const SectionHeader = ({ title }) => (
   <h2 className="text-xl font-bold text-slate-100 mb-4 mt-8 border-b border-slate-700 pb-2 flex items-center gap-2">
@@ -35,6 +37,7 @@ const DatabaseView = ({ currentView, onViewChange, currentDataMode, onDataModeCh
   const [occupationSearch, setOccupationSearch] = useState('');
   const [traitSearch, setTraitSearch] = useState('');
   const [skillSearch, setSkillSearch] = useState('');
+  const [isHowToOpen, setIsHowToOpen] = useState(false);
 
   const filteredOccupations = VANILLA_OCCUPATIONS.filter(occ => 
     occ.name.toLowerCase().includes(occupationSearch.toLowerCase()) || 
@@ -55,13 +58,24 @@ const DatabaseView = ({ currentView, onViewChange, currentDataMode, onDataModeCh
     <div className="p-6 overflow-y-auto h-full custom-scrollbar bg-slate-950 text-slate-200">
         <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-white">Database</h1>
-            <SettingsMenu 
-                currentView={currentView} 
-                onViewChange={onViewChange} 
-                currentDataMode={currentDataMode} 
-                onDataModeChange={onDataModeChange} 
-            />
+            <div className="flex items-center gap-2">
+                <button 
+                    onClick={() => setIsHowToOpen(true)}
+                    className="text-slate-500 hover:text-slate-300 transition-colors p-1"
+                    title="How to Use"
+                >
+                    <HelpIcon size={18} />
+                </button>
+                <SettingsMenu 
+                    currentView={currentView} 
+                    onViewChange={onViewChange} 
+                    currentDataMode={currentDataMode} 
+                    onDataModeChange={onDataModeChange} 
+                />
+            </div>
         </div>
+        
+        <HowToUseModal isOpen={isHowToOpen} onClose={() => setIsHowToOpen(false)} />
         
         {/* PROFESSIONS TABLE */}
         <SectionHeader title="Professions" />

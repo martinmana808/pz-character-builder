@@ -1,14 +1,9 @@
-- tooltip positioning
-- unificar tooltip design. 
+DONT DO ANY OF THESE YET. 
 
-- los traits disabled, cross the original title. strikethru
-- add explanation :
-  this shows you connected traits
-  exclusions
-  detailed explanation of everything
-  share, copy, etc.
 
-- REINSTATE AI, and add a add groq kjey in settings
+
 
 
 - how to monetise this
+- what knowledgebase is ai using?
+- the database tab, is it using the vanilla stuff or the new forensic data or a mix of both? 

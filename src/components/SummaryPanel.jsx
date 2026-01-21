@@ -1,50 +1,51 @@
 import React from 'react';
-import { Copy, Check, Trash2, Share2, HelpCircle } from 'lucide-react';
+import { Copy, Check, Trash2, HelpCircle as HelpIcon } from 'lucide-react';
 import SettingsMenu from './SettingsMenu';
 import RichTooltip from './RichTooltip';
+import HowToUseModal from './HowToUseModal';
+import { SKILL_LABELS } from './SkillsPanel';
 
 const SummaryPanel = ({ points, selectedOccupation, selectedTraits, onReset, onRemoveTrait, skills, currentView, onViewChange, currentDataMode, onDataModeChange, isTraitLocked }) => {
   const [copied, setCopied] = React.useState(false);
-  const [shared, setShared] = React.useState(false);
   const [showHelp, setShowHelp] = React.useState(false);
-
-  const handleShare = () => {
-    const shareUrl = `https://pz-character-builder.netlify.app/${window.location.search}`;
-    navigator.clipboard.writeText(shareUrl);
-    setShared(true);
-    setTimeout(() => setShared(false), 2000);
-  };
+  const [isHowToOpen, setIsHowToOpen] = React.useState(false);
 
   const handleCopy = () => {
     const positives = selectedTraits.filter(t => t.category === 'Positive').map(t => t.name).join(', ');
     const negatives = selectedTraits.filter(t => t.category === 'Negative').map(t => t.name).join(', ');
     
-    const allSkills = Object.entries(skills || {})
+    const allSkillsList = Object.entries(skills || {})
         .filter(([key, val]) => val > 0 || key === 'strength' || key === 'fitness')
         .sort(([keyA, valA], [keyB, valB]) => {
             if (valB !== valA) return valB - valA;
             return keyA.localeCompare(keyB);
         })
-        .map(([key, val]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${val}`)
+        .map(([key, val]) => `${SKILL_LABELS[key] || (key.charAt(0).toUpperCase() + key.slice(1))}: ${val}`)
         .join('\n');
 
+    const shareUrl = `https://pz-character-builder.netlify.app/${window.location.search}`;
 
     const build = `
-Occupation: ${selectedOccupation?.name || 'Unemployed'}
-${selectedOccupation?.description && selectedOccupation.description.length > 1 ? `Description: ${selectedOccupation.description.replace(/^"|"$/g, '')}\n` : ''}
+Occupation:
+${selectedOccupation?.name || 'Unemployed'}
+
 Positive Traits:
 ${positives || 'None'}
 
 Negative Traits:
 ${negatives || 'None'}
 
-
 Starting Major Skills:
-${allSkills}
+${allSkillsList}
 
 Points to Spend: ${points}
 
-Build your PZ character https://pz-character-builder.netlify.app/
+———
+
+Check out this PZ character build:
+${shareUrl}
+
+Build your own PZ character https://pz-character-builder.netlify.app/
     `.trim();
 
     navigator.clipboard.writeText(build);
@@ -56,13 +57,24 @@ Build your PZ character https://pz-character-builder.netlify.app/
     <div className=" flex flex-col shrink-0 space-y-4">
       <div className="hidden lg:flex justify-between items-center mb-2 top-0 bg-slate-950 z-10">
         <h3 className="text-xs uppercase text-slate-500 font-bold">Character Build</h3>
-        <SettingsMenu 
-            currentView={currentView} 
-            onViewChange={onViewChange} 
-            currentDataMode={currentDataMode} 
-            onDataModeChange={onDataModeChange} 
-        />
+        <div className="flex items-center gap-1">
+            <button 
+                onClick={() => setIsHowToOpen(true)}
+                className="text-slate-500 hover:text-slate-300 transition-colors p-1"
+                title="How to Use"
+            >
+                <HelpIcon size={14} />
+            </button>
+            <SettingsMenu 
+                currentView={currentView} 
+                onViewChange={onViewChange} 
+                currentDataMode={currentDataMode} 
+                onDataModeChange={onDataModeChange} 
+            />
+        </div>
       </div>
+      
+      <HowToUseModal isOpen={isHowToOpen} onClose={() => setIsHowToOpen(false)} />
       <div className={`flex justify-between items-center text-xs group  p-1.5 rounded border   cursor-pointer transition-colors ${
           points === 0 ? 'border-slate-800 bg-slate-900/50 opacity-30 text-slate-400' :
           points > 0 ? 'border-emerald-900/30 bg-emerald-900/20 text-emerald-400 ' : 'border-red-900/30 bg-red-900/20 text-red-400 '
@@ -80,20 +92,27 @@ Build your PZ character https://pz-character-builder.netlify.app/
         <div>
            <h4 className="text-[10px] uppercase text-slate-500 font-bold mb-1">Occupation</h4>
            {selectedOccupation ? (
-             <RichTooltip 
-               content={selectedOccupation} 
-               isPositive={true} 
-               cost={selectedOccupation.cost} 
-               isLocked={false} 
-               isOccupation={true}
-             >
-               <div className="flex justify-between items-center text-slate-200 bg-slate-800/50 p-2 rounded border border-slate-800/60 transition-colors hover:border-slate-600 hover:bg-slate-800/80">
-                 <span className="font-semibold text-sm">{selectedOccupation.name}</span>
-                 <span className={`text-sm font-bold opacity-30`}>
-                   {selectedOccupation.cost === 0 ? '0' : (selectedOccupation.cost < 0 ? `${selectedOccupation.cost}` : `+${Math.abs(selectedOccupation.cost)}`)}
-                 </span>
-                </div>
-             </RichTooltip>
+             <>
+               <RichTooltip 
+                 content={selectedOccupation} 
+                 isPositive={true} 
+                 cost={selectedOccupation.cost} 
+                 isLocked={false} 
+                 isOccupation={true}
+               >
+                 <div className="flex justify-between items-center text-slate-200 bg-slate-800/50 p-2 rounded border border-slate-800/60 transition-colors hover:border-slate-600 hover:bg-slate-800/80">
+                   <span className="font-semibold text-sm">{selectedOccupation.name}</span>
+                   <span className={`text-sm font-bold opacity-30`}>
+                     {selectedOccupation.cost === 0 ? '0' : (selectedOccupation.cost < 0 ? `${selectedOccupation.cost}` : `+${Math.abs(selectedOccupation.cost)}`)}
+                   </span>
+                  </div>
+               </RichTooltip>
+               {selectedOccupation.description && (
+                 <p className="mt-1 text-[9px] text-slate-400 leading-relaxed !text-emerald-400 opacity-50 italic">
+                   {selectedOccupation.description.replace(/^"|"$/g, '')}
+                 </p>
+               )}
+             </>
            ) : (
              <span className="text-xs text-slate-600 italic pl-1">None selected</span>
            )}
@@ -101,7 +120,15 @@ Build your PZ character https://pz-character-builder.netlify.app/
 
         <div>
            <div className="flex justify-between items-end mb-1">
-               <h4 className="text-[10px] uppercase text-slate-500 font-bold">Chosen Traits</h4>
+            <h4 className="text-[10px] uppercase text-slate-500 font-bold">Chosen Traits</h4>
+            
+            <button 
+          onClick={() => setShowHelp(!showHelp)}
+          className="flex items-center justify-end gap-1  text-slate-500  hover:text-emerald-500 transition-colors text-[9px] text-slate-400 leading-relaxed mr-1 italic"
+        >
+          Build Information & Help
+          {/* <HelpIcon size={12} /> */}
+        </button>
            </div>
            
            <ul className="space-y-1">
@@ -187,14 +214,8 @@ Build your PZ character https://pz-character-builder.netlify.app/
         </div>
       </div>
 
-      <div className="mt-4 border-t border-slate-800 pt-3">
-        <button 
-          onClick={() => setShowHelp(!showHelp)}
-          className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase hover:text-slate-300 transition-colors"
-        >
-          <HelpCircle size={12} />
-          Build Information & Help
-        </button>
+      <div className="mt-4 border-slate-800">
+        
         
         {showHelp && (
           <div className="mt-2 space-y-3 bg-slate-950/50 p-3 rounded border border-slate-800 animate-in fade-in slide-in-from-top-1 duration-200">
@@ -219,37 +240,31 @@ Build your PZ character https://pz-character-builder.netlify.app/
             <div>
               <h5 className="text-slate-300 text-[10px] font-bold uppercase mb-1">Sharing</h5>
               <p className="text-slate-400 text-[10px] leading-relaxed">
-                Use the <span className="text-slate-200 font-bold">Copy</span> button to get a text summary for Discord, or <span className="text-slate-200 font-bold">Share</span> to copy a unique URL link to this exact build.
+                 Use the <span className="text-slate-200 font-bold">Copy Build</span> button to get a full text summary and share link.
               </p>
             </div>
           </div>
         )}
       </div>
 
-      <div className="mt-4 pt-4 border-t border-slate-800 flex gap-2">
-        <button
-          onClick={handleCopy}
-          className="flex flex-1 items-center justify-center gap-2 py-2 px-4 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-bold transition-colors border border-slate-700 hover:border-slate-500"
-        >
-          {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
-          {copied ? 'Copied' : 'Copy'}
-        </button>
-
-         <button
-          onClick={handleShare}
-          className="flex flex-1 items-center justify-center gap-2 py-2 px-4 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-bold transition-colors border border-slate-700 hover:border-slate-500"
-        >
-          {shared ? <Check size={16} className="text-emerald-400" /> : <Share2 size={16} />}
-          {shared ? 'Copied Link' : 'Share'}
-        </button>
-        
-        <button
-          onClick={onReset}
-          className="px-3 py-2 rounded bg-red-950/30 hover:bg-red-900/50 text-red-400 hover:text-red-300 border border-red-900/50 hover:border-red-500/50 transition-colors"
-          title="Reset Build"
-        >
-           <Trash2 size={16} />
-        </button>
+      <div className="mt-2 border-slate-800">
+        <div className="flex gap-2">
+          <button
+            onClick={handleCopy}
+            className="flex flex-1 items-center justify-center gap-2 py-2 px-4 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-bold transition-colors border border-slate-700 hover:border-slate-500"
+          >
+            {copied ? <Check size={16} /> : <Copy size={16} />}
+            {copied ? 'Copied!' : 'Copy Build'}
+          </button>
+          
+          <button
+            onClick={onReset}
+            className="px-3 py-2 rounded bg-red-950/30 hover:bg-red-900/50 text-red-400 hover:text-red-300 border border-red-900/50 hover:border-red-500/50 transition-colors"
+            title="Reset Build"
+          >
+             <Trash2 size={16} />
+          </button>
+        </div>
       </div>
     </div>
   );

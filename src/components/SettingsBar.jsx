@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { HelpCircle } from 'lucide-react';
+import HowToUseModal from './HowToUseModal';
 
 const SettingsBar = ({ currentView, onViewChange, currentDataMode, onDataModeChange, onReset }) => {
+  const [isHowToOpen, setIsHowToOpen] = useState(false);
   return (
     <div className="flex lg:hidden flex-col gap-2 p-4 bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
       <div className="flex justify-between items-center">
-        <h2 className="text-sm font-black text-slate-200 tracking-tighter uppercase">PZ Character Builder</h2>
+        <div className="flex items-center gap-2">
+            <h2 className="text-sm font-black text-slate-200 tracking-tighter uppercase">PZ Character Builder</h2>
+            <button 
+                onClick={() => setIsHowToOpen(true)}
+                className="text-slate-500 hover:text-slate-300 transition-colors"
+                title="How to Use"
+            >
+                <HelpCircle size={14} />
+            </button>
+        </div>
         <button 
           onClick={onReset}
           className="text-[10px] uppercase font-bold text-red-400 hover:text-red-300 transition-colors"
@@ -12,6 +24,8 @@ const SettingsBar = ({ currentView, onViewChange, currentDataMode, onDataModeCha
           Reset Build
         </button>
       </div>
+      
+      <HowToUseModal isOpen={isHowToOpen} onClose={() => setIsHowToOpen(false)} />
       
       <div className="flex gap-2">
         {/* View Switcher */}

@@ -83,7 +83,10 @@ const SettingsMenu = ({ currentView, onViewChange, currentDataMode, onDataModeCh
             </div>
             
             <div className="p-3 border-t border-slate-800">
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Groq AI Service</h4>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Groq AI Service</h4>
+                  <div className="text-[8px] text-slate-500 leading-tight mb-2">
+                        <span className="text-slate-400">*Get your GROQ API KEY <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-200">here</a></span>
+                  </div>
                 <div className="space-y-2">
                     <input 
                         type="password"
@@ -93,8 +96,9 @@ const SettingsMenu = ({ currentView, onViewChange, currentDataMode, onDataModeCh
                         className="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1.5 text-[10px] text-white focus:outline-none focus:border-cyan-500/50"
                     />
                     <div className="text-[8px] text-slate-500 leading-tight">
-                        Key is stored locally in your browser.
-                    </div>
+                          Key is stored locally in your browser.
+                      </div>
+                      
                 </div>
             </div>
             

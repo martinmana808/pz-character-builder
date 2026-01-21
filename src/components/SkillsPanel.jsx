@@ -2,7 +2,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { VANILLA_SKILLS } from '../data/vanillaData';
 
-const SKILL_LABELS = {
+export const SKILL_LABELS = {
   strength: 'Strength',
   fitness: 'Fitness',
   running: 'Running',
