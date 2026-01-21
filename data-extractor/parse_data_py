@@ -1,0 +1,102 @@
+import re
+import json
+import os
+import sys
+def parse_line(line):
+    parts = line.strip().split(' | ')
+    data = {}
+    
+    first_part = parts[0]
+    if first_part.startswith("Trait: "):
+        data['type'] = 'trait'
+        data['id'] = first_part.replace("Trait: ", "").strip()
+    elif first_part.startswith("Profession: "):
+        data['type'] = 'profession'
+        data['id'] = first_part.replace("Profession: ", "").strip()
+    else:
+        return None
+    for part in parts[1:]:
+        if ": " not in part and "=" not in part:
+            continue
+            
+        if part.startswith("Icon: "):
+            icon_val = part.replace("Icon: ", "").strip()
+            if "Texture{" in icon_val:
+                match = re.search(r'name:"(.*?)"', icon_val)
+                if match:
+                    full_name = match.group(1)
+                    data['icon'] = os.path.basename(full_name)
+                else:
+                    data['icon'] = icon_val
+            else:
+                data['icon'] = icon_val
+        elif part.startswith("XP: "):
+            xp_str = part.replace("XP: ", "").strip()
+            if "=" in xp_str:
+                skill, val = xp_str.split("=")
+                if 'xp_boosts' not in data:
+                    data['xp_boosts'] = {}
+                try:
+                    data['xp_boosts'][skill] = int(val)
+                except ValueError:
+                    data['xp_boosts'][skill] = val
+        elif part.startswith("GrantedTrait: "):
+             trait_id = part.replace("GrantedTrait: ", "").strip()
+             if 'granted_traits' not in data:
+                 data['granted_traits'] = []
+             data['granted_traits'].append(trait_id)
+        elif part.startswith("Exclude: "):
+             ex_id = part.replace("Exclude: ", "").strip()
+             if 'mutual_exclusions' not in data:
+                 data['mutual_exclusions'] = []
+             data['mutual_exclusions'].append(ex_id)
+        else:
+            if ": " in part:
+                key, val = part.split(": ", 1)
+                data[key.lower()] = val
+            
+    return data
+traits = []
+professions = []
+raw_file_path = 'raw_dump.txt'
+if len(sys.argv) > 1:
+    raw_file_path = sys.argv[1]
+try:
+    with open(raw_file_path, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("==="): continue
+            
+            parsed = parse_line(line)
+            if parsed:
+                if parsed['type'] == 'trait':
+                    clean_trait = {
+                        'id': parsed['id'],
+                        'label': parsed.get('label', ''),
+                        'cost': int(parsed.get('cost', 0)),
+                        'description': parsed.get('desc', ''),
+                        'icon': parsed.get('icon', ''),
+                        'xp_boosts': parsed.get('xp_boosts', {}),
+                        'mutual_exclusions': parsed.get('mutual_exclusions', [])
+                    }
+                    traits.append(clean_trait)
+                elif parsed['type'] == 'profession':
+                    clean_prof = {
+                        'id': parsed['id'],
+                        'name': parsed.get('name', parsed.get('label', '')),
+                        'cost': int(parsed.get('cost', 0)),
+                        'description': parsed.get('desc', ''),
+                        'icon': parsed.get('icon', ''),
+                        'xp_boosts': parsed.get('xp_boosts', {}),
+                        'granted_traits': parsed.get('granted_traits', [])
+                    }
+                    professions.append(clean_prof)
+except FileNotFoundError:
+    print(f"Error: {raw_file_path} not found.")
+    sys.exit(1)
+final_data = {
+    'traits': traits,
+    'professions': professions
+}
+# Write to stdout for capture
+print(json.dumps(final_data, indent=2))

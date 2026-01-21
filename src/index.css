@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/* Custom Scrollbar for that "Techy" feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a; /* slate-900 */
+}
+::-webkit-scrollbar-thumb {
+  background: #334155; /* slate-700 */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569; /* slate-600 */
+}
+
+body {
+  @apply bg-slate-950 text-slate-300 antialiased;
+}
+.selected {
+  opacity: 1!important;
+}
+.traitCard:hover, .professionCard:hover, .traitCard:focus, .professionCard:focus {
+  opacity: 1!important;
+}
+.traitCard {
+  height: 42px!important;
+  opacity: .7;
+}
+.items-baseline {
+  align-items: baseline;
+}
+.professionCard {
+  opacity: .7;
+  height: 42px!important;
+}
+.professionCard img {
+  transform-origin: center center;
+}
+.cursor-not-allowed {
+  cursor: not-allowed !important;
+}
