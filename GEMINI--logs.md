@@ -600,5 +600,6 @@ Refactor `RichTooltip` to remove the Portal system and instead use `position: re
 ## Walkthrough
 Verified "relative-absolute" behavior.
 - [x] Tooltips now reside within the DOM tree of their component (e.g. `TraitCard` or `SkillRow`).
-- [x] Positioning remains viewport-aware (flips and clamps to edges) but is now achieved via local absolute offsets.
+- [x] Positioning remains viewport-aware (flips and clamps to edges).
+- [x] No more clipping by `overflow: hidden` parent containers due to `position: fixed` migration.
 - [x] No more top-left corner flickering.

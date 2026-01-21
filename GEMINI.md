@@ -11,7 +11,7 @@ A single-page React application for building Project Zomboid characters for a sp
 
 ## History
 ### [2026-01-21] Parent-Relative Tooltip Migration | [Technical Details](./GEMINI--logs.md#log-20260121-parent-relative-tooltips)
-- Migrated from Portals to Parent-Relative Absolute positioning.
+- Migrated from Portals to Parent-Relative Absolute positioning (leveraging `position: fixed` for clipping bypass).
 - Implemented viewport-to-local coordinate translation for 100% visibility.
 - Prevented initial position flicker with measurement-aware opacity.
 

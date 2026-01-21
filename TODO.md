@@ -11,3 +11,4 @@
 - REINSTATE AI, and add a add groq kjey in settings
 
 
+- how to monetise this

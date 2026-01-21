@@ -85,12 +85,8 @@ const RichTooltip = ({ children, content, isPositive, cost, isLocked, isOccupati
           if (y + th > viewportH - MARGIN) y = viewportH - th - MARGIN;
       }
 
-      // 2. Translate VIEWPORT coordinates to PARENT-RELATIVE coordinates
-      // Since the parent wrapper is relative, (0,0) is tr.left, tr.top
-      const relX = x - tr.left;
-      const relY = y - tr.top;
-
-      setTooltipPos({ x: relX, y: relY });
+      // 2. Use VIEWPORT coordinates directly (bypass local translation)
+      setTooltipPos({ x, y });
       setTooltipDir(dir);
       setIsCalculated(true);
     }
@@ -107,7 +103,7 @@ const RichTooltip = ({ children, content, isPositive, cost, isLocked, isOccupati
     return (
       <div 
         ref={tooltipRef}
-        className={`absolute z-[100] pointer-events-none bg-slate-900 border border-slate-500 rounded-lg p-4 shadow-2xl w-[300px] overflow-y-auto custom-scrollbar animate-in zoom-in-95 duration-100 transition-opacity
+        className={`fixed z-[100] pointer-events-none bg-slate-900 border border-slate-500 rounded-lg p-4 shadow-2xl w-[300px] overflow-y-auto custom-scrollbar animate-in zoom-in-95 duration-100 transition-opacity
             ${isCalculated ? 'opacity-100' : 'opacity-0'}
             ${tooltipDir === 'up' ? 'slide-in-from-bottom-2' : 'slide-in-from-top-2'}
         `}
